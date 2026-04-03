@@ -51,7 +51,7 @@ export default function EmeraldLanding() {
 
       // "play none none reverse" = play saat masuk, reverse saat keluar viewport
       // Ini yang bikin animasi REPEAT setiap scroll — bukan hanya sekali saja
-      const TA = "play none none reverse";
+      const TA = "play none none none";
 
       // ── 1. HERO: Logo parallax zoom — scrub terikat langsung ke scrollbar ──
       gsap.timeline({

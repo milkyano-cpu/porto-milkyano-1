@@ -45,7 +45,7 @@ export default function BDRTransport() {
     const handleScroll = () => setNavScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    const TA = "play none none reverse";
+    const TA = "play none none none";
 
     const ctx = gsap.context(() => {
       // Hero entrance
@@ -57,14 +57,14 @@ export default function BDRTransport() {
         .from(truckRef.current,     { x: 140, opacity: 0, duration: 1.1, ease: "power3.out" }, "-=0.7");
 
       // Hero parallax
-      gsap.to(heroTitleRef.current, {
-        scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: 1.5 },
-        y: -100, opacity: 0.1, ease: "none",
-      });
-      gsap.to(truckRef.current, {
-        scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: 2 },
-        x: 80, y: -50, opacity: 0, ease: "none",
-      });
+      // gsap.to(heroTitleRef.current, {
+      //   scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: 1.5 },
+      //   y: -100, opacity: 0.1, ease: "none",
+      // });
+      // gsap.to(truckRef.current, {
+      //   scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: 2 },
+      //   x: 80, y: -50, opacity: 0, ease: "none",
+      // });
 
       // Route section
       gsap.from(routeRef.current, {
