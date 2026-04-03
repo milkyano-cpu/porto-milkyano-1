@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Pre-compute wheel spokes to avoid SSR/client floating point mismatch
+// Pre-computed spokes — no SSR/client mismatch
 const SPOKE_ANGLES = [0, 60, 120, 180, 240, 300];
 const makeSpokes = (r1: number, r2: number) =>
   SPOKE_ANGLES.map(a => {
@@ -18,8 +18,8 @@ const makeSpokes = (r1: number, r2: number) =>
       y2: +(Math.sin(rad) * r2).toFixed(4),
     };
   });
-const SPOKES_SM  = makeSpokes(5, 12);
-const SPOKES_LG  = makeSpokes(6, 15);
+const SPOKES_SM = makeSpokes(5, 12);
+const SPOKES_LG = makeSpokes(6, 15);
 
 const ROUTE = ["CAIRNS", "TOWNSVILLE", "BRISBANE", "SYDNEY", "MELBOURNE"];
 
@@ -45,26 +45,15 @@ export default function BDRTransport() {
     const handleScroll = () => setNavScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    const TA = "play none none none";
+    const TA = "play none none reverse";
 
     const ctx = gsap.context(() => {
-      // Hero entrance
+      // Hero entrance — text stagger in, truck slides from right
       const tl = gsap.timeline({ delay: 0.1 });
-      tl.from(heroBadgeRef.current, { y: -24, opacity: 0, duration: 0.5, ease: "power2.out" })
-        .from(heroTitleRef.current, { y: 70, opacity: 0, skewY: 4, duration: 0.9, ease: "power3.out" }, "-=0.2")
-        .from(heroSubRef.current,   { y: 30, opacity: 0, duration: 0.6, ease: "power2.out" }, "-=0.4")
-        .from(heroCtaRef.current,   { y: 20, opacity: 0, duration: 0.5, ease: "power2.out" }, "-=0.35")
-        .from(truckRef.current,     { x: 140, opacity: 0, duration: 1.1, ease: "power3.out" }, "-=0.7");
-
-      // Hero parallax
-      // gsap.to(heroTitleRef.current, {
-      //   scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: 1.5 },
-      //   y: -100, opacity: 0.1, ease: "none",
-      // });
-      // gsap.to(truckRef.current, {
-      //   scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: 2 },
-      //   x: 80, y: -50, opacity: 0, ease: "none",
-      // });
+      tl.from(heroBadgeRef.current,  { y: -24, opacity: 0, duration: 0.5, ease: "power2.out" })
+        .from(heroTitleRef.current,  { y: 70, opacity: 0, skewY: 4, duration: 0.9, ease: "power3.out" }, "-=0.2")
+        .from(heroSubRef.current,    { y: 30, opacity: 0, duration: 0.6, ease: "power2.out" }, "-=0.4")
+        .from(heroCtaRef.current,    { y: 20, opacity: 0, duration: 0.5, ease: "power2.out" }, "-=0.35");
 
       // Route section
       gsap.from(routeRef.current, {
@@ -136,29 +125,56 @@ export default function BDRTransport() {
         * { margin:0; padding:0; box-sizing:border-box; }
 
         :root {
-          --orange: #f97316;
+          --orange:   #f97316;
           --orange-d: #ea580c;
-          --yellow: #fbbf24;
-          --glow: rgba(249,115,22,0.22);
-          --dark:  #0a0a0a;
-          --dark2: #111111;
-          --dark3: #1a1a1a;
-          --border: rgba(249,115,22,0.18);
+          --yellow:   #fbbf24;
+          --glow:     rgba(249,115,22,0.22);
+          --dark:     #0a0a0a;
+          --dark2:    #111111;
+          --dark3:    #1a1a1a;
+          --border:   rgba(249,115,22,0.18);
         }
 
-        @keyframes slideDown  { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes bounce     { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(7px)} }
-        @keyframes road-anim  { 0%{stroke-dashoffset:0} 100%{stroke-dashoffset:-60} }
-        @keyframes dot-pulse  { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
-        @keyframes shimmer    { 0%{left:-100%} 100%{left:200%} }
-        @keyframes ticker     {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        @keyframes glow-bar   { 0%,100%{opacity:.4} 50%{opacity:.9} }
+        @keyframes slideDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes bounce    { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(7px)} }
+        @keyframes dot-pulse { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.3)} }
+        @keyframes shimmer   { 0%{left:-100%} 100%{left:200%} }
+        @keyframes ticker    { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
-        /* ── Ticker tape ── */
-        .ticker-wrap { overflow:hidden; background:var(--orange); padding:10px 0; white-space:nowrap; position:relative; }
+        /* ── TRUCK ANIMATIONS (same as Pumping page) ── */
+        @keyframes truck-enter {
+          0%   { transform: translateX(130%); }
+          38%  { transform: translateX(0%); }
+          100% { transform: translateX(0%); }
+        }
+        @keyframes truck-idle {
+          0%,100% { transform: translateY(0px); }
+          50%     { transform: translateY(-3px); }
+        }
+        @keyframes wheel-roll {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes road-move {
+          0%   { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: -60; }
+        }
+        @keyframes dust {
+          0%   { opacity:0; transform:translate(0,0) scale(0.5); }
+          20%  { opacity:0.35; }
+          60%  { opacity:0.12; transform:translate(-20px,-14px) scale(1.9); }
+          100% { opacity:0; transform:translate(-34px,-22px) scale(2.6); }
+        }
+
+        /* Truck CSS classes */
+        .truck-scene    { animation: truck-enter 2.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+        .truck-body     { animation: truck-idle 3s ease-in-out 2.6s infinite; }
+        .wheel-fast     { animation: wheel-roll 0.4s linear 0s 6, wheel-roll 3s linear 2.6s infinite; }
+        .dust-puff      { animation: dust 0.9s ease-out infinite; }
+        .road-dash-anim { stroke-dasharray:40 20; animation: road-move 0.5s linear 0s 5, road-move 3.5s linear 2.6s infinite; }
+
+        /* ── Ticker ── */
+        .ticker-wrap  { overflow:hidden; background:var(--orange); padding:10px 0; white-space:nowrap; }
         .ticker-inner { display:inline-flex; animation:ticker 18s linear infinite; }
         .ticker-item  { display:inline-block; padding:0 40px; font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:.85rem; letter-spacing:3px; color:#fff; text-transform:uppercase; }
         .ticker-dot   { color:rgba(255,255,255,.5); padding:0 8px; }
@@ -193,12 +209,11 @@ export default function BDRTransport() {
         }
         .btn-outline:hover { background:rgba(249,115,22,.1); transform:translateY(-2px); }
 
-        /* ── Service cards ── */
+        /* ── Cards ── */
         .svc-card {
           background:var(--dark3); border:1px solid var(--border);
           padding:32px 26px; position:relative; overflow:hidden;
-          transition:border-color .35s, transform .35s, box-shadow .35s;
-          transform-style:preserve-3d;
+          transition:border-color .35s, transform .35s, box-shadow .35s; transform-style:preserve-3d;
         }
         .svc-card::before {
           content:''; position:absolute; top:0; left:0; width:4px; height:100%;
@@ -216,69 +231,59 @@ export default function BDRTransport() {
         }
         .svc-card:hover::after { animation:shimmer .6s ease; }
 
-        /* ── Stats ── */
         .stat-item { text-align:center; padding:28px 16px; border-left:1px solid rgba(249,115,22,.12); }
         .stat-item:first-child { border-left:none; }
-
-        /* ── Why items ── */
         .why-item { display:flex; gap:16px; margin-bottom:24px; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,.05); }
         .why-item:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
-
-        /* ── Route stop dot ── */
         .route-dot { animation:dot-pulse 2s ease-in-out infinite; }
-
-        /* ── Road animation ── */
-        .road-dash { stroke-dasharray:30 15; animation:road-anim 1.2s linear infinite; }
-
-        /* ── Contact card hover ── */
         .info-card { transition:border-color .25s; }
         .info-card:hover { border-color:rgba(249,115,22,.45) !important; }
 
-        /* ═══ LAYOUT CLASSES ═══ */
-        .nav-inner   { padding:16px 48px; display:flex; align-items:center; justify-content:space-between; }
+        /* ── Layout ── */
+        .nav-inner    { padding:16px 48px; display:flex; align-items:center; justify-content:space-between; }
         .hero-section { min-height:100vh; padding:120px 48px 80px; display:flex; align-items:center; position:relative; overflow:hidden; }
-        .hero-inner  { max-width:1200px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; gap:48px; }
-        .hero-text   { flex:1 1 auto; max-width:600px; }
-        .hero-truck  { flex:0 0 auto; width:48%; max-width:560px; }
-        .section-pad { padding:100px 48px; }
-        .section-sm  { padding:80px 48px; }
-        .inner-max   { max-width:1200px; margin:0 auto; }
-        .inner-1100  { max-width:1100px; margin:0 auto; }
-        .stat-grid   { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); }
-        .svc-grid    { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
-        .why-grid    { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; }
+        .hero-inner   { max-width:1200px; margin:0 auto; width:100%; display:flex; align-items:center; justify-content:space-between; gap:48px; }
+        .hero-text    { flex:1 1 auto; max-width:600px; }
+        .hero-truck   { flex:0 0 auto; width:48%; max-width:560px; }
+        .section-pad  { padding:100px 48px; }
+        .section-sm   { padding:80px 48px; }
+        .inner-max    { max-width:1200px; margin:0 auto; }
+        .inner-1100   { max-width:1100px; margin:0 auto; }
+        .stat-grid    { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(4,1fr); }
+        .svc-grid     { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; }
+        .why-grid     { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:start; }
         .contact-grid { display:grid; grid-template-columns:1fr 1.5fr; gap:40px; align-items:start; }
-        .footer-row  { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
-        .hero-title  { font-size:clamp(3.5rem,7.5vw,6.5rem); }
-        .stat-num    { font-size:2.6rem; }
-        .hero-deco   { display:block; }
-        .cta-btns    { display:flex; gap:14px; flex-wrap:wrap; }
+        .footer-row   { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+        .hero-title   { font-size:clamp(3.5rem,7.5vw,6.5rem); }
+        .stat-num     { font-size:2.6rem; }
+        .hero-deco    { display:block; }
+        .cta-btns     { display:flex; gap:14px; flex-wrap:wrap; }
 
-        /* ═══ MOBILE ═══ */
+        /* ── Mobile ── */
         @media (max-width:767px) {
-          .hamburger      { display:flex !important; }
-          .desktop-nav    { display:none !important; }
-          .desktop-cta    { display:none !important; }
-          .nav-inner      { padding:14px 20px; }
-          .hero-section   { padding:90px 20px 60px; }
-          .hero-inner     { flex-direction:column; gap:28px; }
-          .hero-text      { max-width:100%; }
-          .hero-truck     { width:100%; max-width:320px; margin:0 auto; }
-          .hero-title     { font-size:clamp(2.8rem,13vw,4.2rem); }
-          .section-pad    { padding:64px 20px; }
-          .section-sm     { padding:56px 20px; }
-          .stat-grid      { grid-template-columns:repeat(2,1fr); }
-          .stat-item      { border-left:none !important; border-bottom:1px solid rgba(249,115,22,.1); }
-          .stat-item:nth-child(2n) { border-left:1px solid rgba(249,115,22,.12) !important; }
+          .hamburger    { display:flex !important; }
+          .desktop-nav  { display:none !important; }
+          .desktop-cta  { display:none !important; }
+          .nav-inner    { padding:14px 20px; }
+          .hero-section { padding:90px 20px 60px; }
+          .hero-inner   { flex-direction:column; gap:28px; }
+          .hero-text    { max-width:100%; }
+          .hero-truck   { width:100%; max-width:100%; flex:none; }
+          .hero-title   { font-size:clamp(2.8rem,13vw,4.2rem); }
+          .section-pad  { padding:64px 20px; }
+          .section-sm   { padding:56px 20px; }
+          .stat-grid    { grid-template-columns:repeat(2,1fr); }
+          .stat-item    { border-left:none !important; border-bottom:1px solid rgba(249,115,22,.1); }
+          .stat-item:nth-child(2n)        { border-left:1px solid rgba(249,115,22,.12) !important; }
           .stat-item:nth-last-child(-n+2) { border-bottom:none; }
-          .stat-num       { font-size:2rem; }
-          .svc-grid       { grid-template-columns:1fr; }
-          .why-grid       { grid-template-columns:1fr !important; gap:32px !important; }
-          .contact-grid   { grid-template-columns:1fr; }
-          .footer-row     { flex-direction:column; align-items:flex-start; }
-          .hero-deco      { display:none; }
-          .cta-btns       { flex-direction:column; }
-          .btn-primary, .btn-outline { width:100%; max-width:360px; }
+          .stat-num     { font-size:2rem; }
+          .svc-grid     { grid-template-columns:1fr; }
+          .why-grid     { grid-template-columns:1fr !important; gap:32px !important; }
+          .contact-grid { grid-template-columns:1fr; }
+          .footer-row   { flex-direction:column; align-items:flex-start; }
+          .hero-deco    { display:none; }
+          .cta-btns     { flex-direction:column; }
+          .btn-primary,.btn-outline { width:100%; max-width:360px; }
         }
         @media (max-width:480px) { .svc-grid { grid-template-columns:1fr !important; } }
 
@@ -299,10 +304,10 @@ export default function BDRTransport() {
         </div>
       )}
 
-      {/* ══ TICKER TAPE ══ */}
+      {/* ══ TICKER ══ */}
       <div className="ticker-wrap" style={{ position:"fixed",top:0,left:0,right:0,zIndex:101 }}>
         <div className="ticker-inner">
-          {[...Array(2)].map((_,ti) => (
+          {[0,1].map(ti => (
             <span key={ti}>
               {["MELBOURNE & CAIRNS EVERY WEEK","HOT SHOT TRANSPORT","CARS & MACHINERY","SHOULD'VE CALLED YESTERDAY","RECOVERIES & TOWING","LIMITED SPOTS EACH WEEK"].map((t,i) => (
                 <span key={i} className="ticker-item">{t}<span className="ticker-dot">◆</span></span>
@@ -315,29 +320,24 @@ export default function BDRTransport() {
       {/* ══ NAVBAR ══ */}
       <nav style={{
         position:"fixed",top:36,left:0,right:0,zIndex:100,
-        background: navScrolled ? "rgba(10,10,10,.96)" : "transparent",
+        background: navScrolled ? "rgba(10,10,10,.96)" : "linear-gradient(180deg,rgba(10,10,10,.8) 0%,transparent 100%)",
         backdropFilter: navScrolled ? "blur(20px)" : "none",
         borderBottom: navScrolled ? "1px solid rgba(249,115,22,.12)" : "none",
         transition:"all .4s ease",
       }}>
         <div className="nav-inner">
-          {/* Logo */}
           <div style={{ display:"flex",alignItems:"center",gap:12 }}>
-            <div style={{ position:"relative",width:44,height:44 }}>
-              <div style={{ width:44,height:44,borderRadius:"50%",background:"linear-gradient(135deg,#f97316,#ea580c)",border:"2px solid rgba(249,115,22,.6)",display:"flex",alignItems:"center",justifyContent:"center" }}>
-                <span style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"-1px" }}>BDR</span>
-              </div>
+            <div style={{ width:44,height:44,borderRadius:"50%",background:"linear-gradient(135deg,#f97316,#ea580c)",border:"2px solid rgba(249,115,22,.6)",display:"flex",alignItems:"center",justifyContent:"center" }}>
+              <span style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"-1px" }}>BDR</span>
             </div>
             <div>
               <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1.05rem",color:"#fff",letterSpacing:"2px",lineHeight:1 }}>BDR TRANSPORT</div>
               <div style={{ fontSize:".6rem",color:"var(--orange)",letterSpacing:"2px",lineHeight:1.4 }}>&amp; RECOVERIES</div>
             </div>
           </div>
-
           <div className="desktop-nav" style={{ display:"flex",gap:36 }}>
             {["Services","Routes","Contact"].map(l => <a key={l} href={`#${l.toLowerCase()}`} className="nav-link">{l}</a>)}
           </div>
-
           <a href="tel:0403316753" className="btn-primary desktop-cta" style={{ fontSize:".78rem",padding:"9px 20px" }}>📞 0403 316 753</a>
           <button className={`hamburger ${menuOpen?"open":""}`} onClick={() => setMenuOpen(v => !v)} aria-label="menu">
             <span/><span/><span/>
@@ -345,38 +345,26 @@ export default function BDRTransport() {
         </div>
       </nav>
 
-      {/* ══════════════════════════════════
-           HERO
-      ══════════════════════════════════ */}
-      <section id="hero" className="hero-section" style={{
-        background:"linear-gradient(135deg,#0a0a0a 0%,#0f0a06 50%,#0a0a0a 100%)",
-      }}>
-        {/* Diagonal orange accent */}
+      {/* ══ HERO ══ */}
+      <section id="hero" className="hero-section" style={{ background:"linear-gradient(135deg,#0a0a0a 0%,#0f0a06 50%,#0a0a0a 100%)" }}>
         <div style={{ position:"absolute",top:0,right:0,width:0,height:0,borderStyle:"solid",borderWidth:"0 300px 300px 0",borderColor:"transparent var(--orange) transparent transparent",opacity:.06,pointerEvents:"none" }}/>
-        {/* Grid lines */}
         <div className="hero-deco" style={{ position:"absolute",inset:0,pointerEvents:"none" }}>
           {[20,40,60,80].map(p => (
             <div key={p} style={{ position:"absolute",left:0,right:0,top:`${p}%`,height:1,background:`rgba(249,115,22,${p===40?.07:.025})` }}/>
           ))}
         </div>
-        {/* Orange bottom glow */}
         <div style={{ position:"absolute",bottom:0,left:"50%",transform:"translateX(-50%)",width:"80%",height:2,background:"linear-gradient(90deg,transparent,var(--orange),transparent)",opacity:.3,pointerEvents:"none" }}/>
 
         <div className="hero-inner">
-          {/* LEFT: Text */}
+          {/* Left: Text */}
           <div className="hero-text">
-            {/* Badge */}
             <div ref={heroBadgeRef} style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(249,115,22,.1)",border:"1px solid rgba(249,115,22,.35)",padding:"6px 16px",marginBottom:20 }}>
               <div style={{ width:7,height:7,background:"var(--orange)",borderRadius:"50%",animation:"dot-pulse 2s ease-in-out infinite" }}/>
               <span style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:".78rem",letterSpacing:"3px",color:"var(--orange)",fontWeight:700 }}>HOT SHOT TRANSPORT &amp; RECOVERIES · QLD</span>
             </div>
 
-            {/* Title */}
             <div ref={heroTitleRef}>
-              <h1 className="hero-title" style={{
-                fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,
-                lineHeight:.88,letterSpacing:"-1px",color:"#fff",marginBottom:4,
-              }}>
+              <h1 className="hero-title" style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,lineHeight:.88,letterSpacing:"-1px",color:"#fff",marginBottom:4 }}>
                 SHOULD&apos;VE<br/>
                 <span style={{ color:"var(--orange)",fontStyle:"italic" }}>CALLED</span><br/>
                 YESTERDAY
@@ -392,7 +380,6 @@ export default function BDRTransport() {
               <a href="#routes" className="btn-outline">VIEW ROUTES</a>
             </div>
 
-            {/* Contact quick links */}
             <div style={{ marginTop:32,display:"flex",gap:24,flexWrap:"wrap" }}>
               {[
                 { icon:"📞", val:"0403 316 753",              href:"tel:0403316753" },
@@ -408,121 +395,116 @@ export default function BDRTransport() {
             </div>
           </div>
 
-          {/* RIGHT: Truck + trailer SVG */}
+          {/* Right: Animated Truck SVG */}
           <div ref={truckRef} className="hero-truck">
             <svg viewBox="0 0 560 340" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%"
-              style={{ filter:"drop-shadow(0 4px 40px rgba(249,115,22,0.25))" }}>
+              style={{ filter:"drop-shadow(0 4px 40px rgba(249,115,22,0.25))", overflow:"visible" }}>
 
-              {/* Road surface */}
+              {/* ── ROAD ── */}
               <rect x="0" y="288" width="560" height="52" fill="#141414"/>
               <line x1="0" y1="290" x2="560" y2="290" stroke="rgba(249,115,22,.25)" strokeWidth="1.5"/>
-              {/* Moving road dashes */}
-              <line x1="0" y1="314" x2="560" y2="314" stroke="rgba(255,255,255,.1)" strokeWidth="2" strokeDasharray="40 20" className="road-dash"/>
-              {/* Road edge lines */}
+              {/* Animated road dashes */}
+              <line x1="0" y1="314" x2="560" y2="314"
+                stroke="rgba(255,255,255,.1)" strokeWidth="2"
+                className="road-dash-anim"
+              />
               <line x1="0" y1="338" x2="560" y2="338" stroke="rgba(249,115,22,.15)" strokeWidth="1"/>
 
-              {/* ── LOW-LOADER TRAILER ── */}
-              {/* Main bed */}
-              <rect x="8" y="235" width="330" height="18" rx="2" fill="#222" stroke="rgba(249,115,22,.35)" strokeWidth="1.5"/>
-              {/* Rear ramp */}
-              <path d="M 8,253 L 8,270 L 30,253 Z" fill="#1c1c1c" stroke="rgba(249,115,22,.25)" strokeWidth="1"/>
-              {/* Side rails */}
-              <rect x="8" y="228" width="330" height="7" rx="1" fill="#1e1e1e" stroke="rgba(249,115,22,.2)" strokeWidth="1"/>
-
-              {/* Cargo on trailer: yellow agricultural machine (hopper/seeder) */}
-              {/* Main hopper body */}
-              <path d="M 40,195 L 40,235 L 180,235 L 180,195 Q 180,185 170,182 L 50,182 Q 40,182 40,195 Z"
-                fill="#d97706" stroke="rgba(249,115,22,.6)" strokeWidth="1.5"/>
-              {/* Hopper top cone */}
-              <path d="M 50,182 L 50,160 L 80,145 L 140,145 L 170,160 L 170,182 Z"
-                fill="#f59e0b" stroke="rgba(249,115,22,.5)" strokeWidth="1.5"/>
-              {/* Hopper detail lines */}
-              <line x1="50" y1="195" x2="180" y2="195" stroke="rgba(0,0,0,.2)" strokeWidth="1"/>
-              <line x1="50" y1="210" x2="180" y2="210" stroke="rgba(0,0,0,.2)" strokeWidth="1"/>
-              <line x1="50" y1="225" x2="180" y2="225" stroke="rgba(0,0,0,.2)" strokeWidth="1"/>
-              {/* Machine wheel/axle */}
-              <ellipse cx="75" cy="242" rx="12" ry="12" fill="#333" stroke="rgba(249,115,22,.4)" strokeWidth="1.5"/>
-              <ellipse cx="75" cy="242" rx="6" ry="6" fill="#1a1a1a"/>
-              <ellipse cx="155" cy="242" rx="12" ry="12" fill="#333" stroke="rgba(249,115,22,.4)" strokeWidth="1.5"/>
-              <ellipse cx="155" cy="242" rx="6" ry="6" fill="#1a1a1a"/>
-
-              {/* Secondary cargo: red attachment */}
-              <rect x="185" y="205" width="70" height="30" rx="3" fill="#dc2626" stroke="rgba(249,115,22,.3)" strokeWidth="1"/>
-              <rect x="195" y="195" width="50" height="12" rx="2" fill="#b91c1c"/>
-              {/* Arm extending */}
-              <rect x="248" y="200" width="40" height="6" rx="2" fill="#991b1b"/>
-              <circle cx="292" cy="203" r="5" fill="#333" stroke="#991b1b" strokeWidth="1.5"/>
-
-              {/* Strap detail */}
-              <line x1="50" y1="228" x2="50" y2="240" stroke="rgba(249,115,22,.6)" strokeWidth="2"/>
-              <line x1="100" y1="228" x2="100" y2="240" stroke="rgba(249,115,22,.6)" strokeWidth="2"/>
-              <line x1="160" y1="228" x2="160" y2="240" stroke="rgba(249,115,22,.6)" strokeWidth="2"/>
-
-              {/* ── WHITE GMC UTE (TOW VEHICLE) ── */}
-              {/* Body */}
-              <path d="M 330,220 L 330,190 Q 330,182 336,182 L 415,182 Q 422,182 428,190 L 448,215 L 448,253 L 330,253 Z"
-                fill="#f0f0f0" stroke="rgba(200,200,200,.5)" strokeWidth="1"/>
-              {/* Cab top */}
-              <path d="M 336,182 L 336,162 Q 336,155 342,155 L 410,155 Q 416,155 416,162 L 416,182 Z"
-                fill="#e8e8e8" stroke="rgba(200,200,200,.4)" strokeWidth="1"/>
-              {/* Windshield */}
-              <path d="M 342,162 L 342,182 L 416,182 L 416,162 Q 412,155 342,162 Z"
-                fill="rgba(100,150,200,.2)" stroke="rgba(200,200,200,.3)" strokeWidth="1"/>
-              {/* Side window */}
-              <rect x="335" y="163" width="42" height="18" rx="2" fill="rgba(100,150,200,.15)" stroke="rgba(200,200,200,.3)" strokeWidth="1"/>
-              {/* Door line */}
-              <line x1="380" y1="162" x2="380" y2="253" stroke="rgba(180,180,180,.4)" strokeWidth="1"/>
-              {/* Door handle */}
-              <rect x="375" y="200" width="10" height="5" rx="1" fill="rgba(150,150,150,.8)"/>
-              {/* Bed / tray */}
-              <rect x="330" y="190" width="10" height="63" fill="#ddd" stroke="rgba(200,200,200,.3)" strokeWidth="1"/>
-              {/* Tow hitch */}
-              <rect x="320" y="244" width="14" height="8" rx="2" fill="#aaa"/>
-              <rect x="318" y="248" width="6" height="12" rx="1" fill="#999"/>
-
-              {/* Grille */}
-              <rect x="444" y="210" width="18" height="30" rx="3" fill="#ddd" stroke="rgba(200,200,200,.5)" strokeWidth="1"/>
-              {/* GMC grille details */}
-              {[214,220,226,232].map(y => <line key={y} x1="444" y1={y} x2="462" y2={y} stroke="rgba(150,150,150,.4)" strokeWidth="1"/>)}
-              {/* Headlight (orange accent) */}
-              <rect x="445" y="195" width="14" height="8" rx="2" fill="rgba(249,115,22,.9)"/>
-              <rect x="447" y="197" width="10" height="3" rx="1" fill="rgba(255,200,50,.7)"/>
-              {/* Front bumper */}
-              <rect x="443" y="240" width="20" height="13" rx="2" fill="#ccc"/>
-              {/* Black accents */}
-              <rect x="330" y="248" width="118" height="5" fill="rgba(0,0,0,.15)"/>
-
-              {/* Exhaust */}
-              <rect x="432" y="158" width="7" height="30" rx="2" fill="#555"/>
-              {/* Smoke puffs */}
-              <circle cx="435" cy="154" r="5" fill="rgba(255,255,255,.07)"/>
-              <circle cx="432" cy="146" r="7" fill="rgba(255,255,255,.05)"/>
-              <circle cx="436" cy="138" r="9" fill="rgba(255,255,255,.03)"/>
-
-              {/* Orange side stripe on ute */}
-              <rect x="330" y="215" width="118" height="5" fill="rgba(249,115,22,.7)"/>
-
-              {/* ── TRAILER WHEELS ── */}
-              {[55, 105, 230, 280].map(tx => (
-                <g key={tx} transform={`translate(${tx},290)`}>
-                  <circle cx="0" cy="0" r="20" fill="#1a1a1a" stroke="rgba(249,115,22,.45)" strokeWidth="2"/>
-                  <circle cx="0" cy="0" r="12" fill="#111" stroke="rgba(249,115,22,.25)" strokeWidth="1.5"/>
-                  <circle cx="0" cy="0" r="4" fill="var(--orange)" opacity=".7"/>
-                  {SPOKES_SM.map((s,i) => <line key={i} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke="rgba(249,115,22,.4)" strokeWidth="1.5"/>)}
-                </g>
+              {/* Dust puffs behind rear wheels */}
+              {[0,1,2].map(i => (
+                <ellipse key={i} cx={60} cy={288}
+                  rx={7+i*4} ry={4+i*2}
+                  fill="rgba(180,140,60,.1)"
+                  className="dust-puff"
+                  style={{ animationDelay:`${i*0.28}s`, animationDuration:"0.9s", animationIterationCount:"6" }}
+                />
               ))}
 
-              {/* ── UTE WHEELS ── */}
-              {[375, 435].map(tx => (
-                <g key={tx} transform={`translate(${tx},290)`}>
-                  <circle cx="0" cy="0" r="24" fill="#111" stroke="rgba(240,240,240,.5)" strokeWidth="2.5"/>
-                  <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="rgba(240,240,240,.3)" strokeWidth="1.5"/>
-                  {/* Black rim detail */}
-                  <circle cx="0" cy="0" r="22" fill="none" stroke="rgba(0,0,0,.5)" strokeWidth="3"/>
-                  <circle cx="0" cy="0" r="5" fill="#888" opacity=".9"/>
-                  {SPOKES_LG.map((s,i) => <line key={i} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke="rgba(200,200,200,.5)" strokeWidth="2"/>)}
-                </g>
-              ))}
+              {/* ── TRUCK drives in from right ── */}
+              <g className="truck-scene">
+                <g className="truck-body">
+
+                  {/* LOW-LOADER TRAILER BED */}
+                  <rect x="8" y="235" width="330" height="18" rx="2" fill="#222" stroke="rgba(249,115,22,.35)" strokeWidth="1.5"/>
+                  <path d="M 8,253 L 8,270 L 30,253 Z" fill="#1c1c1c" stroke="rgba(249,115,22,.25)" strokeWidth="1"/>
+                  <rect x="8" y="228" width="330" height="7" rx="1" fill="#1e1e1e" stroke="rgba(249,115,22,.2)" strokeWidth="1"/>
+
+                  {/* CARGO: Yellow hopper/seeder */}
+                  <path d="M 40,195 L 40,235 L 180,235 L 180,195 Q 180,185 170,182 L 50,182 Q 40,182 40,195 Z" fill="#d97706" stroke="rgba(249,115,22,.6)" strokeWidth="1.5"/>
+                  <path d="M 50,182 L 50,160 L 80,145 L 140,145 L 170,160 L 170,182 Z" fill="#f59e0b" stroke="rgba(249,115,22,.5)" strokeWidth="1.5"/>
+                  <line x1="50" y1="195" x2="180" y2="195" stroke="rgba(0,0,0,.2)" strokeWidth="1"/>
+                  <line x1="50" y1="210" x2="180" y2="210" stroke="rgba(0,0,0,.2)" strokeWidth="1"/>
+                  <line x1="50" y1="225" x2="180" y2="225" stroke="rgba(0,0,0,.2)" strokeWidth="1"/>
+                  <ellipse cx="75"  cy="242" rx="12" ry="12" fill="#333" stroke="rgba(249,115,22,.4)" strokeWidth="1.5"/>
+                  <ellipse cx="75"  cy="242" rx="6"  ry="6"  fill="#1a1a1a"/>
+                  <ellipse cx="155" cy="242" rx="12" ry="12" fill="#333" stroke="rgba(249,115,22,.4)" strokeWidth="1.5"/>
+                  <ellipse cx="155" cy="242" rx="6"  ry="6"  fill="#1a1a1a"/>
+
+                  {/* Secondary red cargo */}
+                  <rect x="185" y="205" width="70" height="30" rx="3" fill="#dc2626" stroke="rgba(249,115,22,.3)" strokeWidth="1"/>
+                  <rect x="195" y="195" width="50" height="12" rx="2" fill="#b91c1c"/>
+                  <rect x="248" y="200" width="40" height="6" rx="2" fill="#991b1b"/>
+                  <circle cx="292" cy="203" r="5" fill="#333" stroke="#991b1b" strokeWidth="1.5"/>
+
+                  {/* Straps */}
+                  <line x1="50"  y1="228" x2="50"  y2="240" stroke="rgba(249,115,22,.6)" strokeWidth="2"/>
+                  <line x1="100" y1="228" x2="100" y2="240" stroke="rgba(249,115,22,.6)" strokeWidth="2"/>
+                  <line x1="160" y1="228" x2="160" y2="240" stroke="rgba(249,115,22,.6)" strokeWidth="2"/>
+
+                  {/* WHITE GMC UTE */}
+                  <path d="M 330,220 L 330,190 Q 330,182 336,182 L 415,182 Q 422,182 428,190 L 448,215 L 448,253 L 330,253 Z" fill="#f0f0f0" stroke="rgba(200,200,200,.5)" strokeWidth="1"/>
+                  <path d="M 336,182 L 336,162 Q 336,155 342,155 L 410,155 Q 416,155 416,162 L 416,182 Z" fill="#e8e8e8" stroke="rgba(200,200,200,.4)" strokeWidth="1"/>
+                  <path d="M 342,162 L 342,182 L 416,182 L 416,162 Q 412,155 342,162 Z" fill="rgba(100,150,200,.2)" stroke="rgba(200,200,200,.3)" strokeWidth="1"/>
+                  <rect x="335" y="163" width="42" height="18" rx="2" fill="rgba(100,150,200,.15)" stroke="rgba(200,200,200,.3)" strokeWidth="1"/>
+                  <line x1="380" y1="162" x2="380" y2="253" stroke="rgba(180,180,180,.4)" strokeWidth="1"/>
+                  <rect x="375" y="200" width="10" height="5" rx="1" fill="rgba(150,150,150,.8)"/>
+                  <rect x="330" y="190" width="10" height="63" fill="#ddd" stroke="rgba(200,200,200,.3)" strokeWidth="1"/>
+                  <rect x="320" y="244" width="14" height="8"  rx="2" fill="#aaa"/>
+                  <rect x="318" y="248" width="6"  height="12" rx="1" fill="#999"/>
+                  {/* Grille */}
+                  <rect x="444" y="210" width="18" height="30" rx="3" fill="#ddd" stroke="rgba(200,200,200,.5)" strokeWidth="1"/>
+                  {[214,220,226,232].map(y => <line key={y} x1="444" y1={y} x2="462" y2={y} stroke="rgba(150,150,150,.4)" strokeWidth="1"/>)}
+                  {/* Headlight */}
+                  <rect x="445" y="195" width="14" height="8" rx="2" fill="rgba(249,115,22,.9)"/>
+                  <rect x="447" y="197" width="10" height="3" rx="1" fill="rgba(255,200,50,.7)"/>
+                  {/* Bumper */}
+                  <rect x="443" y="240" width="20" height="13" rx="2" fill="#ccc"/>
+                  <rect x="330" y="248" width="118" height="5" fill="rgba(0,0,0,.15)"/>
+                  {/* Exhaust */}
+                  <rect x="432" y="158" width="7" height="30" rx="2" fill="#555"/>
+                  <circle cx="435" cy="154" r="5" fill="rgba(255,255,255,.07)"/>
+                  <circle cx="432" cy="146" r="7" fill="rgba(255,255,255,.05)"/>
+                  <circle cx="436" cy="138" r="9" fill="rgba(255,255,255,.03)"/>
+                  {/* Orange stripe */}
+                  <rect x="330" y="215" width="118" height="5" fill="rgba(249,115,22,.7)"/>
+
+                  {/* TRAILER WHEELS — animated */}
+                  {[55, 105, 230, 280].map(tx => (
+                    <g key={tx} transform={`translate(${tx},290)`}>
+                      <circle cx="0" cy="0" r="20" fill="#1a1a1a" stroke="rgba(249,115,22,.45)" strokeWidth="2"/>
+                      <circle cx="0" cy="0" r="12" fill="#111"    stroke="rgba(249,115,22,.25)" strokeWidth="1.5"/>
+                      <circle cx="0" cy="0" r="4"  fill="var(--orange)" opacity=".7"/>
+                      <g className="wheel-fast">
+                        {SPOKES_SM.map((s,i) => <line key={i} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke="rgba(249,115,22,.4)" strokeWidth="1.5"/>)}
+                      </g>
+                    </g>
+                  ))}
+
+                  {/* UTE WHEELS — animated */}
+                  {[375, 435].map(tx => (
+                    <g key={tx} transform={`translate(${tx},290)`}>
+                      <circle cx="0" cy="0" r="24" fill="#111"    stroke="rgba(240,240,240,.5)" strokeWidth="2.5"/>
+                      <circle cx="0" cy="0" r="15" fill="#1a1a1a" stroke="rgba(240,240,240,.3)" strokeWidth="1.5"/>
+                      <circle cx="0" cy="0" r="22" fill="none"    stroke="rgba(0,0,0,.5)"       strokeWidth="3"/>
+                      <circle cx="0" cy="0" r="5"  fill="#888" opacity=".9"/>
+                      <g className="wheel-fast">
+                        {SPOKES_LG.map((s,i) => <line key={i} x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2} stroke="rgba(200,200,200,.5)" strokeWidth="2"/>)}
+                      </g>
+                    </g>
+                  ))}
+
+                </g>{/* end truck-body */}
+              </g>{/* end truck-scene */}
 
               {/* Ground shadow */}
               <ellipse cx="280" cy="340" rx="270" ry="7" fill="rgba(249,115,22,.07)"/>
@@ -541,7 +523,7 @@ export default function BDRTransport() {
         </div>
       </section>
 
-      {/* ══ WEEKLY ROUTE BANNER ══ */}
+      {/* ══ WEEKLY ROUTE ══ */}
       <section id="routes" ref={routeRef} style={{ background:"var(--dark2)",borderTop:"1px solid rgba(249,115,22,.15)",borderBottom:"1px solid rgba(249,115,22,.15)",padding:"56px 48px" }}>
         <div className="inner-1100">
           <div style={{ textAlign:"center",marginBottom:40 }}>
@@ -549,29 +531,23 @@ export default function BDRTransport() {
             <h2 style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.8rem,4vw,3rem)",fontWeight:900,color:"#fff",lineHeight:.95,letterSpacing:"-1px" }}>
               MELBOURNE &amp; CAIRNS <span style={{ color:"var(--orange)" }}>EVERY WEEK</span>
             </h2>
-            <p style={{ color:"rgba(255,255,255,.4)",fontSize:".95rem",marginTop:12,maxWidth:500,margin:"12px auto 0" }}>
+            <p style={{ color:"rgba(255,255,255,.4)",fontSize:".95rem",maxWidth:500,margin:"12px auto 0" }}>
               Cars and machinery. Limited spots available each week — book early to secure your slot.
             </p>
           </div>
-
-          {/* Route visual */}
           <div style={{ display:"flex",alignItems:"center",justifyContent:"center",gap:0,overflowX:"auto",padding:"8px 0" }}>
-            {ROUTE.map((city, i) => (
+            {ROUTE.map((city,i) => (
               <div key={city} style={{ display:"flex",alignItems:"center" }}>
-                {/* Stop */}
                 <div style={{ display:"flex",flexDirection:"column",alignItems:"center",gap:8,minWidth:90 }}>
-                  <div style={{ width:i===0||i===ROUTE.length-1?18:13,height:i===0||i===ROUTE.length-1?18:13,borderRadius:"50%",background:i===0||i===ROUTE.length-1?"var(--orange)":"rgba(249,115,22,.5)",border:"2px solid var(--orange)",animation:"dot-pulse 2s ease-in-out infinite",animationDelay:`${i*.3}s` }}/>
+                  <div className="route-dot" style={{ width:i===0||i===ROUTE.length-1?18:13,height:i===0||i===ROUTE.length-1?18:13,borderRadius:"50%",background:i===0||i===ROUTE.length-1?"var(--orange)":"rgba(249,115,22,.5)",border:"2px solid var(--orange)",animationDelay:`${i*.3}s` }}/>
                   <span style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700,fontSize:i===0||i===ROUTE.length-1?".85rem":".75rem",color:i===0||i===ROUTE.length-1?"var(--orange)":"rgba(255,255,255,.5)",letterSpacing:"1px",textAlign:"center" }}>{city}</span>
                 </div>
-                {/* Connector */}
                 {i < ROUTE.length-1 && (
                   <div style={{ flex:1,height:2,minWidth:32,background:"linear-gradient(90deg,rgba(249,115,22,.6),rgba(249,115,22,.2))",margin:"0 4px",marginBottom:22 }}/>
                 )}
               </div>
             ))}
           </div>
-
-          {/* Limited spots badges */}
           <div style={{ display:"flex",gap:12,justifyContent:"center",marginTop:32,flexWrap:"wrap" }}>
             {["✅ Cars","✅ Machinery","⚡ Limited Spots Each Week","📅 Book in Advance"].map(b => (
               <span key={b} style={{ padding:"7px 18px",background:"rgba(249,115,22,.1)",border:"1px solid rgba(249,115,22,.3)",color:"rgba(255,255,255,.75)",fontSize:".82rem",fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700,letterSpacing:"1px" }}>{b}</span>
@@ -583,12 +559,7 @@ export default function BDRTransport() {
       {/* ══ STATS ══ */}
       <div ref={statsRef} style={{ background:"var(--dark)",borderBottom:"1px solid rgba(249,115,22,.1)" }}>
         <div className="stat-grid">
-          {[
-            {n:"Weekly",l:"Melbourne-Cairns Run"},
-            {n:"Cars+",l:"Machinery Transported"},
-            {n:"24/7", l:"Available"},
-            {n:"QLD",  l:"& Nationwide"},
-          ].map(s => (
+          {[{n:"Weekly",l:"Melbourne-Cairns Run"},{n:"Cars+",l:"Machinery Transported"},{n:"24/7",l:"Available"},{n:"QLD",l:"& Nationwide"}].map(s => (
             <div key={s.l} className="stat-item">
               <div className="stat-num" style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,color:"var(--orange)",lineHeight:1 }}>{s.n}</div>
               <div style={{ fontSize:".7rem",letterSpacing:"2px",color:"rgba(255,255,255,.35)",marginTop:6,textTransform:"uppercase",fontFamily:"'Barlow',sans-serif" }}>{s.l}</div>
@@ -608,12 +579,12 @@ export default function BDRTransport() {
           </div>
           <div ref={servicesRef} className="svc-grid">
             {[
-              { icon:"🚗", title:"Car Transport",         desc:"Cars, sports cars, classics and luxury vehicles transported safely on our low-loader trailer. Interstate runs every week.", tag:"Melbourne–Cairns" },
-              { icon:"🚜", title:"Machinery & Equipment", desc:"Agricultural equipment, construction machinery and industrial gear. We've moved hoppers, seeders, implements and more.", tag:"All Sizes"         },
-              { icon:"⚡", title:"Hot Shot Transport",    desc:"When standard freight is too slow. Hot shot loads moved fast with dedicated runs — no shared loads, no delays.",          tag:"Express Runs"      },
-              { icon:"🔧", title:"Vehicle Recovery",      desc:"Breakdowns happen. We recover vehicles across Queensland and beyond — fast, reliable and available when you need it.",    tag:"24/7 Available"    },
-              { icon:"🛣️", title:"Interstate Freight",    desc:"Regular weekly routes: Melbourne → Sydney → Brisbane → Townsville → Cairns. And return. Cars and machinery welcome.",   tag:"Weekly Schedule"   },
-              { icon:"🏗️", title:"Oversized Loads",      desc:"Large agricultural and construction equipment requiring specialised low-loader transport. Permits arranged as needed.",    tag:"Permit Ready"      },
+              { icon:"🚗", title:"Car Transport",        desc:"Cars, sports cars, classics and luxury vehicles transported safely on our low-loader trailer. Interstate runs every week.", tag:"Melbourne–Cairns" },
+              { icon:"🚜", title:"Machinery & Equipment",desc:"Agricultural equipment, construction machinery and industrial gear. Hoppers, seeders, implements and more.",             tag:"All Sizes"        },
+              { icon:"⚡", title:"Hot Shot Transport",   desc:"When standard freight is too slow. Hot shot loads moved fast with dedicated runs — no shared loads, no delays.",          tag:"Express Runs"     },
+              { icon:"🔧", title:"Vehicle Recovery",     desc:"Breakdowns happen. We recover vehicles across Queensland and beyond — fast, reliable, available when you need it.",       tag:"24/7 Available"   },
+              { icon:"🛣️", title:"Interstate Freight",   desc:"Regular weekly routes: Melbourne → Sydney → Brisbane → Townsville → Cairns. And return. Cars and machinery welcome.",    tag:"Weekly Schedule"  },
+              { icon:"🏗️", title:"Oversized Loads",     desc:"Large agricultural and construction equipment requiring specialised low-loader transport. Permits arranged as needed.",    tag:"Permit Ready"     },
             ].map(s => (
               <div key={s.title} className="svc-card">
                 <div style={{ fontSize:"2rem",marginBottom:14 }}>{s.icon}</div>
@@ -629,7 +600,6 @@ export default function BDRTransport() {
       {/* ══ WHY BDR ══ */}
       <section ref={whyRef} className="section-pad" style={{ background:"var(--dark2)",borderTop:"1px solid rgba(249,115,22,.07)" }}>
         <div className="why-grid">
-          {/* Left: visual panel */}
           <div ref={whyLeftRef} style={{ background:"var(--dark3)",border:"1px solid var(--border)",padding:"44px 36px",position:"relative",overflow:"hidden" }}>
             {[{top:0,left:0},{top:0,right:0},{bottom:0,left:0},{bottom:0,right:0}].map((pos,i) => (
               <div key={i} style={{ position:"absolute",...pos,width:18,height:18,
@@ -639,60 +609,33 @@ export default function BDRTransport() {
                 borderRight:i%2===1?"2px solid var(--orange)":undefined,
               }}/>
             ))}
-
-            {/* Route map SVG */}
             <svg width="100%" viewBox="0 0 300 380" fill="none">
-              {/* Australia outline simplified */}
-              <path d="M 50,30 L 240,30 L 265,80 L 280,160 L 255,230 L 230,310 L 160,360 L 100,350 L 50,290 L 25,210 L 30,120 Z"
-                fill="rgba(249,115,22,.04)" stroke="rgba(249,115,22,.2)" strokeWidth="1.5" strokeLinejoin="round"/>
-
-              {/* Route line Cairns→Melbourne */}
-              <polyline points="165,55 160,90 155,140 150,200 148,260 145,320"
-                stroke="var(--orange)" strokeWidth="3" fill="none" strokeDasharray="10 6" strokeLinecap="round"/>
-
-              {/* City dots with glow */}
-              {[
-                [165,55,"CAIRNS",true],
-                [160,90,"TOWNSVILLE",false],
-                [155,140,"MACKAY",false],
-                [150,200,"BRISBANE",false],
-                [148,260,"SYDNEY",false],
-                [145,320,"MELBOURNE",true],
-              ].map(([x,y,label,big]) => (
+              <path d="M 50,30 L 240,30 L 265,80 L 280,160 L 255,230 L 230,310 L 160,360 L 100,350 L 50,290 L 25,210 L 30,120 Z" fill="rgba(249,115,22,.04)" stroke="rgba(249,115,22,.2)" strokeWidth="1.5" strokeLinejoin="round"/>
+              <polyline points="165,55 160,90 155,140 150,200 148,260 145,320" stroke="var(--orange)" strokeWidth="3" fill="none" strokeDasharray="10 6" strokeLinecap="round"/>
+              {[[165,55,"CAIRNS",true],[160,90,"TOWNSVILLE",false],[155,140,"MACKAY",false],[150,200,"BRISBANE",false],[148,260,"SYDNEY",false],[145,320,"MELBOURNE",true]].map(([x,y,label,big]) => (
                 <g key={String(label)}>
                   <circle cx={Number(x)} cy={Number(y)} r={big?11:7} fill="var(--orange)" opacity={big?.9:.55}/>
                   <circle cx={Number(x)} cy={Number(y)} r={big?18:11} fill="none" stroke="var(--orange)" strokeWidth="1" opacity=".25"/>
-                  <text x={Number(x)+15} y={Number(y)+4}
-                    fontFamily="Barlow Condensed, sans-serif" fontWeight="700"
-                    fontSize={big?"13":"11"} fill={big?"var(--orange)":"rgba(249,115,22,.65)"} letterSpacing="1">
-                    {String(label)}
-                  </text>
+                  <text x={Number(x)+15} y={Number(y)+4} fontFamily="Barlow Condensed,sans-serif" fontWeight="700" fontSize={big?"13":"11"} fill={big?"var(--orange)":"rgba(249,115,22,.65)"} letterSpacing="1">{String(label)}</text>
                 </g>
               ))}
-
-              {/* EVERY WEEK label */}
               <rect x="60" y="340" width="180" height="30" rx="2" fill="rgba(249,115,22,.12)" stroke="rgba(249,115,22,.3)" strokeWidth="1"/>
-              <text x="150" y="360" textAnchor="middle" fontFamily="Barlow Condensed, sans-serif" fontWeight="900" fontSize="13" fill="var(--orange)" letterSpacing="3">EVERY WEEK</text>
+              <text x="150" y="360" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="900" fontSize="13" fill="var(--orange)" letterSpacing="3">EVERY WEEK</text>
             </svg>
-
-            {/* Badge */}
-            <div style={{ position:"absolute",bottom:-1,right:-1,background:"var(--orange)",color:"#fff",padding:"12px 18px",fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:".75rem",lineHeight:1.4,letterSpacing:"1px" }}>
-              HOT<br/>SHOT
-            </div>
+            <div style={{ position:"absolute",bottom:-1,right:-1,background:"var(--orange)",color:"#fff",padding:"12px 18px",fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:".75rem",lineHeight:1.4,letterSpacing:"1px" }}>HOT<br/>SHOT</div>
           </div>
 
-          {/* Right */}
           <div ref={whyRightRef}>
             <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:".75rem",letterSpacing:"5px",color:"var(--orange)",marginBottom:12,fontWeight:700 }}>WHY CHOOSE BDR</div>
             <h2 style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:"clamp(1.8rem,4vw,3rem)",fontWeight:900,color:"#fff",lineHeight:.95,marginBottom:36,letterSpacing:"-1px" }}>
               TRUSTED BY QLD&apos;S<br/><span style={{ color:"var(--orange)" }}>FARMERS &amp;</span><br/>CAR OWNERS
             </h2>
             {[
-              { icon:"🚀", title:"Hot Shot Specialists",       desc:"Dedicated loads, no waiting for shared freight. Your cargo moves when you need it." },
-              { icon:"📅", title:"Weekly Scheduled Runs",      desc:"Melbourne & Cairns every week. Same reliable schedule so you can plan ahead with confidence." },
-              { icon:"💬", title:"Deal Direct with Tim",       desc:"No call centres. No runaround. Call or message Tim directly and get a real answer fast." },
-              { icon:"🌏", title:"Cars & Machinery",           desc:"From Porsches to paddock equipment — if it fits on the trailer, we'll move it safely." },
-              { icon:"🛡️", title:"Fully Insured",              desc:"All loads covered with comprehensive freight insurance for complete peace of mind." },
+              { icon:"🚀", title:"Hot Shot Specialists",    desc:"Dedicated loads, no waiting for shared freight. Your cargo moves when you need it." },
+              { icon:"📅", title:"Weekly Scheduled Runs",   desc:"Melbourne & Cairns every week. Same reliable schedule so you can plan ahead with confidence." },
+              { icon:"💬", title:"Deal Direct",             desc:"No call centres. No runaround. Call or message directly and get a real answer fast." },
+              { icon:"🌏", title:"Cars & Machinery",        desc:"From Porsches to paddock equipment — if it fits on the trailer, we'll move it safely." },
+              { icon:"🛡️", title:"Fully Insured",           desc:"All loads covered with comprehensive freight insurance for complete peace of mind." },
             ].map(item => (
               <div key={item.title} className="why-item">
                 <div style={{ fontSize:"1.5rem",lineHeight:1,marginTop:2 }}>{item.icon}</div>
@@ -716,10 +659,10 @@ export default function BDRTransport() {
           SHOULD&apos;VE CALLED<br/><span style={{ color:"var(--orange)",fontStyle:"normal" }}>YESTERDAY</span>
         </h2>
         <p style={{ color:"rgba(255,255,255,.4)",fontSize:"1rem",maxWidth:440,margin:"0 auto 36px",lineHeight:1.7 }}>
-          Don&apos;t miss the weekly run. Contact Tim now for a fast quote on your car, machinery or freight.
+          Don&apos;t miss the weekly run. Contact us now for a fast quote on your car, machinery or freight.
         </p>
         <div style={{ display:"flex",gap:14,justifyContent:"center",flexWrap:"wrap" }}>
-          <a href="tel:0403316753" className="btn-primary">📞 CALL TIM — 0403 316 753</a>
+          <a href="tel:0403316753" className="btn-primary">📞 CALL — 0403 316 753</a>
           <a href="#contact" className="btn-outline">SEND A MESSAGE</a>
         </div>
       </section>
@@ -733,17 +676,14 @@ export default function BDRTransport() {
               BOOK YOUR<br/><span style={{ color:"var(--orange)" }}>SPOT TODAY</span>
             </h2>
           </div>
-
           <div className="contact-grid">
-            {/* Info */}
             <div style={{ display:"flex",flexDirection:"column",gap:14 }}>
               {[
-                { icon:"👤", label:"Contact",      val:"Tim",                                href:undefined },
-                { icon:"📞", label:"Phone / SMS",  val:"0403 316 753",                       href:"tel:0403316753" },
-                { icon:"✉️", label:"Email",        val:"Bdrtransportqld@gmail.com",          href:"mailto:Bdrtransportqld@gmail.com" },
-                { icon:"📘", label:"Facebook",     val:"BDR Transport and Recoveries",       href:"https://www.facebook.com/share/1CjfdfRB7f/?mibextid=wwXIfr" },
+                { icon:"📞", label:"Phone / SMS",  val:"0403 316 753",                   href:"tel:0403316753" },
+                { icon:"✉️", label:"Email",        val:"Bdrtransportqld@gmail.com",      href:"mailto:Bdrtransportqld@gmail.com" },
+                { icon:"📘", label:"Facebook",     val:"BDR Transport and Recoveries",   href:"https://www.facebook.com/share/1CjfdfRB7f/?mibextid=wwXIfr" },
                 { icon:"🛣️", label:"Weekly Route", val:"Melbourne ↔ Cairns (via Brisbane & Sydney)", href:undefined },
-                { icon:"📍", label:"Base",         val:"Queensland, Australia",              href:undefined },
+                { icon:"📍", label:"Base",         val:"Queensland, Australia",          href:undefined },
               ].map(c => (
                 <div key={c.label} className="info-card" style={{ display:"flex",gap:14,alignItems:"flex-start",padding:"14px 18px",background:"var(--dark3)",border:"1px solid var(--border)" }}>
                   <span style={{ fontSize:"1.2rem",lineHeight:1,marginTop:1 }}>{c.icon}</span>
@@ -761,24 +701,18 @@ export default function BDRTransport() {
                 </div>
               ))}
             </div>
-
-            {/* Form */}
             <div style={{ background:"var(--dark3)",border:"1px solid var(--border)",padding:"36px 32px" }}>
-              <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700,fontSize:"1.1rem",color:"#fff",letterSpacing:"1px",marginBottom:22,textTransform:"uppercase" }}>
-                Request a Quote
-              </div>
+              <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700,fontSize:"1.1rem",color:"#fff",letterSpacing:"1px",marginBottom:22,textTransform:"uppercase" }}>Request a Quote</div>
               {[
-                { label:"Your Name",         type:"text",  ph:"John Smith"           },
-                { label:"Phone / SMS",       type:"tel",   ph:"04XX XXX XXX"         },
-                { label:"Email",             type:"email", ph:"you@example.com"      },
-                { label:"What are you moving?", type:"text", ph:"e.g. Car, tractor, machinery" },
-                { label:"From",              type:"text",  ph:"e.g. Melbourne"       },
-                { label:"To",                type:"text",  ph:"e.g. Cairns"          },
+                { label:"Your Name",           type:"text",  ph:"John Smith"                  },
+                { label:"Phone / SMS",         type:"tel",   ph:"04XX XXX XXX"                },
+                { label:"Email",               type:"email", ph:"you@example.com"             },
+                { label:"What are you moving?",type:"text",  ph:"e.g. Car, tractor, machinery"},
+                { label:"From",                type:"text",  ph:"e.g. Melbourne"              },
+                { label:"To",                  type:"text",  ph:"e.g. Cairns"                 },
               ].map(f => (
                 <div key={f.label} style={{ marginBottom:14 }}>
-                  <label style={{ display:"block",fontSize:".62rem",letterSpacing:"2px",color:"rgba(255,255,255,.38)",marginBottom:5,fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700 }}>
-                    {f.label.toUpperCase()}
-                  </label>
+                  <label style={{ display:"block",fontSize:".62rem",letterSpacing:"2px",color:"rgba(255,255,255,.38)",marginBottom:5,fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700 }}>{f.label.toUpperCase()}</label>
                   <input type={f.type} placeholder={f.ph} style={{ width:"100%",background:"rgba(255,255,255,.04)",border:"1px solid rgba(249,115,22,.18)",padding:"11px 13px",color:"#fff",fontSize:".88rem",outline:"none",borderRadius:2 }}
                     onFocus={e=>e.target.style.borderColor="rgba(249,115,22,.55)"}
                     onBlur={e=>e.target.style.borderColor="rgba(249,115,22,.18)"}
@@ -787,7 +721,7 @@ export default function BDRTransport() {
               ))}
               <div style={{ marginBottom:20 }}>
                 <label style={{ display:"block",fontSize:".62rem",letterSpacing:"2px",color:"rgba(255,255,255,.38)",marginBottom:5,fontFamily:"'Barlow Condensed',sans-serif",fontWeight:700 }}>ADDITIONAL DETAILS</label>
-                <textarea rows={3} placeholder="Any other details — size, weight, urgency, preferred date…" style={{ width:"100%",background:"rgba(255,255,255,.04)",border:"1px solid rgba(249,115,22,.18)",padding:"11px 13px",color:"#fff",fontSize:".88rem",outline:"none",resize:"vertical",fontFamily:"inherit",borderRadius:2 }}
+                <textarea rows={3} placeholder="Size, weight, urgency, preferred date…" style={{ width:"100%",background:"rgba(255,255,255,.04)",border:"1px solid rgba(249,115,22,.18)",padding:"11px 13px",color:"#fff",fontSize:".88rem",outline:"none",resize:"vertical",fontFamily:"inherit",borderRadius:2 }}
                   onFocus={e=>e.target.style.borderColor="rgba(249,115,22,.55)"}
                   onBlur={e=>e.target.style.borderColor="rgba(249,115,22,.18)"}
                 />
