@@ -294,7 +294,10 @@ export default function AdeptConcreting() {
 
         /* ── Layouts ── */
         .nav-inner    { padding:16px 48px; display:flex; align-items:center; justify-content:space-between; }
-        .hero-section { min-height:100vh; position:relative; overflow:hidden; display:flex; align-items:flex-end; padding:80px 48px 60px; }
+        .hero-section { min-height:100vh; position:relative; overflow:hidden; display:flex; align-items:center; padding:100px 48px 60px; }
+        .hero-inner   { display:flex; align-items:center; gap:48px; width:100%; }
+        .hero-text    { flex:1 1 auto; max-width:560px; }
+        .hero-truck   { flex:0 0 auto; width:46%; max-width:540px; }
         .section-pad  { padding:100px 48px; }
         .section-sm   { padding:80px 48px; }
         .inner-max    { max-width:1200px; margin:0 auto; }
@@ -321,29 +324,58 @@ export default function AdeptConcreting() {
         .gal-item:nth-child(5) { grid-column:3/4; grid-row:2/3; height:200px; }
 
         @media (max-width:767px) {
-          .hamburger   { display:flex !important; }
-          .desktop-nav { display:none !important; }
-          .desktop-cta { display:none !important; }
-          .nav-inner   { padding:14px 20px; }
-          .hero-section{ padding:88px 20px 52px; align-items:flex-end; }
-          .hero-title  { font-size:clamp(2.8rem,13vw,4.2rem); }
-          .section-pad { padding:64px 20px; }
-          .section-sm  { padding:56px 20px; }
-          .stat-grid   { grid-template-columns:repeat(2,1fr); }
-          .stat-item   { border-left:none !important; border-bottom:1px solid rgba(251,191,36,.1); }
+          .hamburger      { display:flex !important; }
+          .desktop-nav    { display:none !important; }
+          .desktop-cta    { display:none !important; }
+
+          /* Nav */
+          .nav-inner      { padding:12px 16px; }
+
+          /* Hero — stack vertically, truck below text like BDR Transport */
+          .hero-section   { padding:80px 20px 40px; align-items:flex-end; justify-content:center; }
+          .hero-inner     { flex-direction:column; align-items:flex-start; gap:24px; }
+          .hero-text      { max-width:100%; }
+          /* Truck: show on mobile, smaller, full width */
+          .hero-truck     { width:100%; max-width:100%; flex:none; }
+          .hero-title     { font-size:clamp(2.4rem,11vw,3.8rem); }
+          .hero-deco      { display:none; }
+          .cta-btns       { flex-direction:column; align-items:stretch; }
+          .btn-primary,
+          .btn-outline    { width:100%; text-align:center; justify-content:center; }
+
+          /* Sections */
+          .section-pad    { padding:56px 20px; }
+          .section-sm     { padding:48px 20px; }
+
+          /* Stats */
+          .stat-grid      { grid-template-columns:repeat(2,1fr); }
+          .stat-item      { border-left:none !important; border-bottom:1px solid rgba(251,191,36,.1); }
           .stat-item:nth-child(2n)         { border-left:1px solid rgba(251,191,36,.12) !important; }
           .stat-item:nth-last-child(-n+2)  { border-bottom:none; }
-          .stat-num    { font-size:2rem; }
-          .svc-grid    { grid-template-columns:1fr; }
-          .why-grid    { grid-template-columns:1fr !important; gap:32px !important; }
-          .contact-grid{ grid-template-columns:1fr; }
-          .footer-row  { flex-direction:column; align-items:flex-start; }
-          .hero-deco   { display:none; }
-          .cta-btns    { flex-direction:column; }
-          .btn-primary,.btn-outline { width:100%; max-width:360px; }
-          .gallery-grid{ grid-template-columns:1fr 1fr; }
-          .gal-item:nth-child(1) { grid-column:1/3; grid-row:auto; height:200px; }
-          .gal-item:nth-child(n) { grid-column:auto; grid-row:auto; height:160px; }
+          .stat-num       { font-size:1.9rem; }
+
+          /* Services */
+          .svc-grid       { grid-template-columns:1fr; }
+
+          /* Why */
+          .why-grid       { grid-template-columns:1fr !important; gap:28px !important; }
+
+          /* Contact */
+          .contact-grid   { grid-template-columns:1fr; }
+
+          /* Footer */
+          .footer-row     { flex-direction:column; align-items:flex-start; }
+
+          /* Gallery */
+          .gallery-grid   {
+            grid-template-columns:1fr 1fr;
+            grid-template-rows:auto;
+          }
+          .gal-item:nth-child(1) { grid-column:1/3; height:180px; }
+          .gal-item:nth-child(2),
+          .gal-item:nth-child(3),
+          .gal-item:nth-child(4),
+          .gal-item:nth-child(5) { grid-column:auto; grid-row:auto; height:140px; }
         }
 
         input::placeholder, textarea::placeholder { color:rgba(255,255,255,.22); }
@@ -366,7 +398,7 @@ export default function AdeptConcreting() {
       {/* ══ NAVBAR ══ */}
       <nav style={{
         position:"fixed",top:0,left:0,right:0,zIndex:100,
-        background: navScrolled ? "rgba(17,16,8,.96)" : "linear-gradient(180deg,rgba(17,16,8,.8) 0%,transparent 100%)",
+        background: navScrolled ? "rgba(17,16,8,.96)" : "linear-gradient(180deg,rgba(17,16,8,.85) 0%,transparent 100%)",
         backdropFilter: navScrolled ? "blur(20px)" : "none",
         borderBottom: navScrolled ? "1px solid rgba(251,191,36,.12)" : "none",
         transition:"all .4s ease",
@@ -424,10 +456,10 @@ export default function AdeptConcreting() {
         {/* Top-right corner accent */}
         <div style={{ position:"absolute",top:0,right:0,width:0,height:0,borderStyle:"solid",borderWidth:"0 260px 260px 0",borderColor:"transparent rgba(251,191,36,.04) transparent transparent",pointerEvents:"none" }}/>
 
-        <div className="inner-max" style={{ position:"relative",zIndex:2,width:"100%",display:"flex",alignItems:"flex-end",gap:48 }}>
+        <div className="inner-max hero-inner" style={{ position:"relative",zIndex:2 }}>
 
           {/* ── LEFT: Text ── */}
-          <div style={{ flex:"1 1 auto",maxWidth:560,paddingBottom:8 }}>
+          <div className="hero-text">
             <div ref={heroBadgeRef} style={{ display:"inline-flex",alignItems:"center",gap:8,background:"rgba(251,191,36,.1)",border:"1px solid rgba(251,191,36,.4)",padding:"6px 16px",marginBottom:20 }}>
               <div style={{ width:7,height:7,background:"var(--yellow)",borderRadius:"50%",animation:"dot-pulse 2s ease-in-out infinite" }}/>
               <span style={{ fontFamily:"'Barlow Condensed',sans-serif",fontSize:".78rem",letterSpacing:"3px",color:"var(--yellow)",fontWeight:700 }}>CONCRETE LINE PUMP · GYMPIE QLD</span>
@@ -466,7 +498,7 @@ export default function AdeptConcreting() {
           </div>
 
           {/* ── RIGHT: Animated Pump Truck ── */}
-          <div style={{ flex:"0 0 auto",width:"46%",maxWidth:540,paddingBottom:0 }}>
+          <div className="hero-truck">
             <svg viewBox="0 0 540 300" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%"
               style={{ filter:"drop-shadow(0 4px 32px rgba(251,191,36,0.18))", overflow:"visible" }}>
 
