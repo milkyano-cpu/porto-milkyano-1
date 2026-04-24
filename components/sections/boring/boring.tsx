@@ -450,163 +450,16 @@ export default function SouthernBoring() {
 
           {/* ══ HERO VIS: Drill rig boring underground ══ */}
           <div ref={heroVisRef} className="hero-vis">
-            <svg viewBox="0 0 540 360" fill="none" xmlns="http://www.w3.org/2000/svg" width="100%"
-              style={{ overflow:"visible", filter:"drop-shadow(0 8px 40px rgba(0,0,0,0.6))" }}>
-
-              {/* ── SCENE: House with driveway + Grundomat boring underneath ── */}
-
-              {/* SKY / ABOVE GROUND */}
-              <rect x="0" y="0" width="540" height="168" fill="#141414"/>
-
-              {/* HOUSE — right side */}
-              {/* House body */}
-              <rect x="310" y="28" width="220" height="142" rx="3" fill="#1C1C1C" stroke="rgba(255,255,255,.07)" strokeWidth="1"/>
-              {/* Roof */}
-              <path d="M302,30 L420,4 L538,30Z" fill="#181818" stroke="rgba(255,255,255,.05)" strokeWidth="1"/>
-              {/* Garage */}
-              <rect x="330" y="90" width="90" height="80" fill="#1A1A1A" stroke="rgba(255,255,255,.06)" strokeWidth="1"/>
-              {[0,1,2,3].map(i => <line key={i} x1="330" y1={90+i*20} x2="420" y2={90+i*20} stroke="rgba(255,255,255,.04)" strokeWidth="1"/>)}
-              {/* Door */}
-              <rect x="460" y="120" width="40" height="50" rx="1" fill="#161616" stroke="rgba(255,255,255,.06)" strokeWidth="1"/>
-              {/* Windows — lit */}
-              <rect x="340" y="40" width="36" height="30" rx="2" fill="rgba(255,220,100,.08)" stroke="rgba(255,220,100,.12)" strokeWidth="1"/>
-              <rect x="465" y="40" width="36" height="30" rx="2" fill="rgba(255,220,100,.08)" stroke="rgba(255,220,100,.12)" strokeWidth="1"/>
-              {/* NBN box on house wall */}
-              <rect x="496" y="78" width="18" height="24" rx="2" fill="#1E1E1E" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-              <circle cx="505" cy="90" r="3" fill="rgba(232,97,10,.6)"/>
-
-              {/* DRIVEWAY — concrete slab */}
-              <rect x="310" y="168" width="220" height="18" fill="#2A2A2A" stroke="rgba(255,255,255,.07)" strokeWidth="1"/>
-              {/* Expansion joints */}
-              {[365,420,475].map(x => <line key={x} x1={x} y1="168" x2={x} y2="186" stroke="rgba(255,255,255,.05)" strokeWidth="1"/>)}
-              {/* Driveway top edge line */}
-              <line x1="310" y1="169" x2="530" y2="169" stroke="rgba(255,255,255,.1)" strokeWidth="1"/>
-
-              {/* GRASS VERGE — left side of driveway */}
-              <rect x="0" y="162" width="310" height="24" fill="#2D4018" opacity=".8"/>
-              <rect x="0" y="166" width="310" height="20" fill="#253510" opacity=".5"/>
-              {/* Garden hedge / plants along fence */}
-              {[30,65,100,140,178,215,255,290].map(x => (
-                <g key={x}>
-                  <ellipse cx={x} cy={164} rx={13} ry={9} fill="#1E4A12" opacity=".9"/>
-                  <ellipse cx={x+7} cy={160} rx={9} ry={7} fill="#255810" opacity=".7"/>
-                </g>
-              ))}
-
-              {/* GROUND CROSS-SECTION */}
-              {/* Topsoil */}
-              <rect x="0" y="186" width="540" height="48" fill="#3D2B1A"/>
-              {/* Subsoil */}
-              <rect x="0" y="234" width="540" height="66" fill="#2A1D0E"/>
-              {/* Rock/clay */}
-              <rect x="0" y="300" width="540" height="60" fill="#1C1206"/>
-              {/* Surface line */}
-              <line x1="0" y1="186" x2="540" y2="186" stroke="rgba(232,97,10,.2)" strokeWidth="1.5"/>
-              {/* Layer labels */}
-              <text x="8" y="212" fontFamily="Barlow Condensed,sans-serif" fontSize="8" fill="rgba(232,97,10,.28)" letterSpacing="1.5">TOPSOIL</text>
-              <text x="8" y="258" fontFamily="Barlow Condensed,sans-serif" fontSize="8" fill="rgba(232,97,10,.22)" letterSpacing="1.5">SUBSOIL</text>
-              <text x="8" y="320" fontFamily="Barlow Condensed,sans-serif" fontSize="8" fill="rgba(232,97,10,.16)" letterSpacing="1.5">CLAY / ROCK</text>
-
-              {/* BORE TUNNEL — under the driveway */}
-              {/* Tunnel shadow */}
-              <ellipse cx="420" cy="234" rx="180" ry="12" fill="rgba(14,8,2,.5)"/>
-              {/* Installed conduit pipe */}
-              <path d="M50,234 Q150,232 250,234 Q350,236 450,234 Q490,233 520,234"
-                stroke="#E8610A" strokeWidth="10" strokeLinecap="round" fill="none" opacity=".55"/>
-              <path d="M50,234 Q150,232 250,234 Q350,236 450,234 Q490,233 520,234"
-                stroke="rgba(255,140,40,.3)" strokeWidth="5" strokeLinecap="round" fill="none"/>
-              {/* Bore path direction dashes */}
-              <path d="M50,234 Q200,232 350,234 Q450,235 520,234"
-                stroke="rgba(232,97,10,.4)" strokeWidth="2" strokeDasharray="10 6" strokeLinecap="round" fill="none"/>
-              {/* Entry pit — left/grass side */}
-              <rect x="36" y="186" width="20" height="35" rx="2" fill="#1A0E06" stroke="rgba(232,97,10,.45)" strokeWidth="1.5"/>
-              <text x="46" y="230" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontSize="7" fill="rgba(232,97,10,.4)" transform="rotate(-90,46,222)">ENTRY</text>
-              {/* Exit pit — right side (under house) */}
-              <rect x="504" y="186" width="18" height="32" rx="2" fill="#1A0E06" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-              {/* Conduit going up to NBN box */}
-              <rect x="509" y="160" width="4" height="28" rx="1" fill="#E8610A" opacity=".45"/>
-
-              {/* ══ GRUNDOMAT MACHINE on surface ══ */}
-              {/* This is the key — it's compact, residential, NOT a big tracked excavator */}
-              <g className="rig-scene">
-                {/* Machine body — compact boxy unit */}
-                <rect x="68" y="108" width="185" height="62" rx="5" fill="#1C1C1C" stroke="rgba(232,97,10,.45)" strokeWidth="2"/>
-                {/* Orange stripe / branding */}
-                <rect x="68" y="148" width="185" height="16" fill="rgba(232,97,10,.65)"/>
-                {/* Engine section */}
-                <rect x="76" y="116" width="90" height="26" rx="2" fill="#252525" stroke="rgba(255,255,255,.04)" strokeWidth="1"/>
-                {[84,100,116,132,148].map(x => <rect key={x} x={x} y="118" width="4" height="22" rx="1" fill="rgba(255,255,255,.04)"/>)}
-                {/* Control panel */}
-                <rect x="178" y="114" width="68" height="30" rx="3" fill="#222" stroke="rgba(232,97,10,.2)" strokeWidth="1"/>
-                {/* Dials & LEDs */}
-                <circle cx="192" cy="124" r="6" fill="#1A1A1A" stroke="rgba(232,97,10,.3)" strokeWidth="1"/>
-                <circle cx="192" cy="124" r="3" fill="rgba(232,97,10,.5)"/>
-                <circle cx="210" cy="122" r="3" fill="rgba(100,255,100,.4)"/>
-                <circle cx="224" cy="122" r="3" fill="rgba(232,97,10,.7)"/>
-                <circle cx="210" cy="134" r="3" fill="rgba(255,255,255,.15)"/>
-                <circle cx="224" cy="134" r="3" fill="rgba(255,255,255,.15)"/>
-                {/* Brand on machine */}
-                <text x="158" y="160" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="900" fontSize="10" fill="rgba(14,14,14,.9)" letterSpacing="2">GRUNDOMAT</text>
-                {/* Pneumatic hose — connects machine to probe in ground */}
-                <path d="M68,158 Q58,162 50,168 Q44,174 44,186"
-                  fill="none" stroke="#333" strokeWidth="8" strokeLinecap="round"/>
-                <path d="M68,158 Q58,162 50,168 Q44,174 44,186"
-                  fill="none" stroke="#444" strokeWidth="5" strokeLinecap="round"/>
-                {/* Pneumatic piercing probe in entry pit */}
-                <rect x="40" y="186" width="12" height="28" rx="3" fill="#E8610A" stroke="rgba(255,120,30,.4)" strokeWidth="1.5"/>
-                <path d="M46,214 L46,228" stroke="#FF7A22" strokeWidth="3" strokeLinecap="round"/>
-                <circle cx="46" cy="232" r="5" fill="#FF7A22"/>
-                {/* Wheels — small rubber wheels */}
-                {[86,136,186,236].map(wx => (
-                  <g key={wx}>
-                    <circle cx={wx} cy="172" r="10" fill="#111" stroke="rgba(232,97,10,.3)" strokeWidth="1.5"/>
-                    <circle cx={wx} cy="172" r="5" fill="#1a1a1a"/>
-                    <circle cx={wx} cy="172" r="2" fill="#444"/>
-                  </g>
-                ))}
-              </g>
-
-              {/* Operator silhouette — tradesperson standing beside machine */}
-              <g style={{ opacity:0.75 }}>
-                <circle cx="282" cy="132" r="12" fill="#C8A07A"/>
-                {/* Hi-vis vest */}
-                <rect x="270" y="144" width="24" height="30" rx="2" fill="#E8610A" opacity=".85"/>
-                {/* Arms */}
-                <rect x="254" y="148" width="16" height="7" rx="3" fill="#E8610A" opacity=".75"/>
-                <rect x="294" y="148" width="16" height="7" rx="3" fill="#E8610A" opacity=".75"/>
-                {/* Legs */}
-                <rect x="272" y="174" width="8" height="20" rx="2" fill="#2a2d32"/>
-                <rect x="282" y="174" width="8" height="20" rx="2" fill="#2a2d32"/>
-                {/* Cap */}
-                <path d="M270,130 Q282,122 294,130 L294,136 Q282,132 270,136Z" fill="#1C1C1C"/>
-                {/* Clipboard/phone in hand */}
-                <rect x="250" y="148" width="12" height="16" rx="1" fill="#555"/>
-              </g>
-
-              {/* Ground shadow */}
-              <ellipse cx="270" cy="356" rx="260" ry="5" fill="rgba(0,0,0,.3)"/>
-
-              {/* ── FLOATING BADGES ── */}
-              {/* No mess badge */}
-              <g style={{ animation:"float-badge 3s ease-in-out 0.5s infinite" }}>
-                <rect x="8" y="14" width="150" height="74" rx="3" fill="#1A1A1A"
-                  style={{ filter:"drop-shadow(0 4px 18px rgba(0,0,0,.55))" }}/>
-                <rect x="8" y="14" width="150" height="4" rx="3" fill="var(--orange)"/>
-                <text x="83" y="40" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="900" fontSize="13" fill="#fff" letterSpacing="1">NO MESS.</text>
-                <text x="83" y="56" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="700" fontSize="11" fill="var(--orange-l)" letterSpacing="1">NO DIGGING.</text>
-                <text x="83" y="80" textAnchor="middle" fontFamily="Barlow,sans-serif" fontSize="8.5" fill="rgba(255,255,255,.3)">Driveways · Gardens · Paths</text>
-              </g>
-              {/* Same day quote badge */}
-              <g style={{ animation:"float-badge 3.6s ease-in-out 1.8s infinite" }}>
-                <rect x="382" y="12" width="150" height="74" rx="3" fill="#1A1A1A" stroke="rgba(232,97,10,.25)" strokeWidth="1.5"
-                  style={{ filter:"drop-shadow(0 4px 16px rgba(0,0,0,.4))" }}/>
-                <rect x="382" y="12" width="150" height="4" rx="3" fill="rgba(232,97,10,.7)"/>
-                <text x="457" y="38" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="900" fontSize="14" fill="var(--orange-l)" letterSpacing="1">SAME DAY</text>
-                <text x="457" y="54" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="900" fontSize="14" fill="#fff" letterSpacing="1">QUOTE</text>
-                <text x="457" y="78" textAnchor="middle" fontFamily="Barlow,sans-serif" fontSize="8.5" fill="rgba(255,255,255,.3)">25+ years experience</text>
-              </g>
-
-            </svg>
+            <img
+              src="/boring/hero-image.png"
+              alt="Horizontal boring under driveway"
+              style={{
+                width: "100%",
+                height: "auto",
+                display: "block",
+                filter: "drop-shadow(0 8px 40px rgba(0,0,0,0.6))"
+              }}
+            />
           </div>
         </div>
 
@@ -677,69 +530,12 @@ export default function SouthernBoring() {
 
             {/* Card 1 — Driveway boring: before/after cross-section, main hero card */}
             <div className="gal-item">
-              <svg width="100%" height="100%" viewBox="0 0 520 280" preserveAspectRatio="xMidYMid slice" style={{ display:"block" }}>
-                <rect width="520" height="280" fill="#141414"/>
-                {/* Surface — house + garage on left */}
-                <rect width="520" height="130" fill="#141414"/>
-                {/* House wall */}
-                <rect x="0" y="20" width="180" height="110" fill="#1C1C1C" stroke="rgba(255,255,255,.06)" strokeWidth="1"/>
-                {/* Garage door */}
-                <rect x="15" y="55" width="80" height="65" fill="#222" stroke="rgba(255,255,255,.07)" strokeWidth="1"/>
-                {[0,1,2,3].map(i => <line key={i} x1="15" y1={55+i*16} x2="95" y2={55+i*16} stroke="rgba(255,255,255,.05)" strokeWidth="1"/>)}
-                {/* Roof */}
-                <path d="M0,22 L90,0 L180,22Z" fill="#191919" stroke="rgba(255,255,255,.05)" strokeWidth="1"/>
-                {/* Driveway surface — concrete slab */}
-                <rect x="0" y="120" width="340" height="16" fill="#2A2A2A" stroke="rgba(255,255,255,.08)" strokeWidth="1"/>
-                {/* Concrete join lines */}
-                {[85,170,255].map(x => <line key={x} x1={x} y1="120" x2={x} y2="136" stroke="rgba(255,255,255,.06)" strokeWidth="1"/>)}
-                {/* Grass on right side of driveway */}
-                <rect x="340" y="118" width="180" height="18" fill="#2D4A1A" opacity=".8"/>
-                {/* Footpath beyond */}
-                <rect x="440" y="115" width="80" height="21" fill="#252525" stroke="rgba(255,255,255,.05)" strokeWidth="1"/>
-                {/* Ground layers cross-section */}
-                <rect x="0" y="136" width="520" height="50" fill="#3D2B1A"/>
-                <rect x="0" y="186" width="520" height="50" fill="#2A1D0E"/>
-                <rect x="0" y="236" width="520" height="44" fill="#1C1206"/>
-                {/* Layer labels */}
-                <text x="480" y="158" fontFamily="Barlow Condensed,sans-serif" fontSize="7.5" fill="rgba(232,97,10,.3)" letterSpacing="1">TOPSOIL</text>
-                <text x="480" y="208" fontFamily="Barlow Condensed,sans-serif" fontSize="7.5" fill="rgba(232,97,10,.25)" letterSpacing="1">SUBSOIL</text>
-                {/* BEFORE side — left: no pipe yet, ground undisturbed */}
-                <text x="80" y="150" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontSize="9" fill="rgba(255,255,255,.25)" letterSpacing="2">BEFORE</text>
-                {/* AFTER side — right: pipe installed, no surface damage */}
-                <text x="380" y="150" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontSize="9" fill="rgba(232,97,10,.55)" letterSpacing="2">AFTER</text>
-                {/* Divider dashed line */}
-                <line x1="250" y1="136" x2="250" y2="280" stroke="rgba(232,97,10,.2)" strokeWidth="1.5" strokeDasharray="6 4"/>
-                {/* Installed pipe — right side only */}
-                <rect x="250" y="185" width="270" height="8" rx="4" fill="#E8610A" opacity=".65"/>
-                <rect x="250" y="187" width="270" height="4" rx="2" fill="rgba(255,140,40,.3)"/>
-                {/* Grundomat machine — compact, sitting on surface left side */}
-                <g transform="translate(185,78)">
-                  {/* Machine body — small, compact */}
-                  <rect x="0" y="0" width="55" height="35" rx="3" fill="#1C1C1C" stroke="rgba(232,97,10,.4)" strokeWidth="1.5"/>
-                  <rect x="0" y="26" width="55" height="9" fill="rgba(232,97,10,.6)"/>
-                  {/* Control panel */}
-                  <rect x="30" y="5" width="20" height="16" rx="1" fill="#222" stroke="rgba(232,97,10,.2)" strokeWidth="1"/>
-                  <circle cx="36" cy="13" r="2" fill="rgba(232,97,10,.6)"/>
-                  <circle cx="44" cy="13" r="2" fill="rgba(255,255,255,.2)"/>
-                  {/* Nose/front */}
-                  <rect x="-12" y="12" width="14" height="8" rx="2" fill="#E8610A" opacity=".7"/>
-                  {/* Brand */}
-                  <text x="14" y="18" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="900" fontSize="7" fill="var(--orange)" letterSpacing="1">GRUNDOMAT</text>
-                  {/* Wheels */}
-                  {[8,42].map(wx => <circle key={wx} cx={wx} cy="36" r="6" fill="#111" stroke="rgba(232,97,10,.3)" strokeWidth="1.5"/>)}
-                </g>
-                {/* Entry pit */}
-                <rect x="183" y="136" width="16" height="22" rx="1" fill="#1A0E06" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-                {/* Bore path arrow */}
-                <path d="M191,158 Q220,160 250,162 Q350,168 460,170"
-                  stroke="rgba(232,97,10,.45)" strokeWidth="2" strokeDasharray="8 5" fill="none"/>
-                {/* Exit point right */}
-                <circle cx="462" cy="189" r="7" fill="rgba(232,97,10,.3)" stroke="rgba(232,97,10,.55)" strokeWidth="1.5"/>
-                <circle cx="462" cy="189" r="3" fill="rgba(232,97,10,.6)"/>
-                {/* Checkmark on right — surface intact */}
-                <circle cx="390" cy="126" r="14" fill="rgba(232,97,10,.15)" stroke="rgba(232,97,10,.4)" strokeWidth="1.5"/>
-                <path d="M382,126 L388,133 L400,118" stroke="var(--orange-l)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-              </svg>
+              <img
+                src="/boring/driveway-boring.png"
+                alt="Driveway boring"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+
               <div style={{ position:"absolute",bottom:0,left:0,right:0,padding:"16px 20px",background:"linear-gradient(to top,rgba(0,0,0,.9),transparent)" }}>
                 <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"1px" }}>DRIVEWAY BORING</div>
                 <div style={{ fontSize:".72rem",color:"rgba(232,97,10,.85)",marginTop:2,fontFamily:"'Barlow',sans-serif" }}>Grundomat bores under slab — concrete stays untouched</div>
@@ -748,67 +544,12 @@ export default function SouthernBoring() {
 
             {/* Card 2 — Grundomat machine detail + garden context */}
             <div className="gal-item">
-              <svg width="100%" height="100%" viewBox="0 0 240 280" preserveAspectRatio="xMidYMid slice" style={{ display:"block" }}>
-                <rect width="240" height="280" fill="#111"/>
-                {/* Garden scene background */}
-                {/* Lawn */}
-                <rect x="0" y="150" width="240" height="130" fill="#2D4018"/>
-                <rect x="0" y="152" width="240" height="128" fill="#253510" opacity=".4"/>
-                {/* Garden beds */}
-                <rect x="0" y="140" width="240" height="18" fill="#3D2B1A"/>
-                {[20,45,70,95,120,145,170,195,220].map(x => (
-                  <ellipse key={x} cx={x} cy={140} rx="10" ry="7" fill="#1A3A10" opacity=".85"/>
-                ))}
-                {/* Sky/wall */}
-                <rect x="0" y="0" width="240" height="90" fill="#161616"/>
-                {/* House fence */}
-                <rect x="0" y="82" width="240" height="12" fill="#1E1E1E" stroke="rgba(255,255,255,.06)" strokeWidth="1"/>
-                {[0,30,60,90,120,150,180,210].map(x => <rect key={x} x={x+2} y="72" width="10" height="14" rx="1" fill="#222"/>)}
-                {/* Grundomat machine — detailed, compact residential boring tool */}
-                <g transform="translate(60,95)">
-                  {/* Main body — orange + dark */}
-                  <rect x="0" y="0" width="120" height="48" rx="4" fill="#1C1C1C" stroke="rgba(232,97,10,.45)" strokeWidth="2"/>
-                  {/* Orange stripe */}
-                  <rect x="0" y="36" width="120" height="12" fill="rgba(232,97,10,.7)"/>
-                  {/* Control panel right side */}
-                  <rect x="80" y="6" width="34" height="24" rx="2" fill="#222" stroke="rgba(232,97,10,.2)" strokeWidth="1"/>
-                  {/* LED indicators */}
-                  <circle cx="90" cy="14" r="3" fill="rgba(232,97,10,.8)"/>
-                  <circle cx="102" cy="14" r="3" fill="rgba(100,255,100,.4)"/>
-                  <circle cx="90" cy="24" r="2" fill="rgba(255,255,255,.15)"/>
-                  <circle cx="102" cy="24" r="2" fill="rgba(255,255,255,.15)"/>
-                  {/* Engine/compressor left */}
-                  <rect x="6" y="6" width="68" height="26" rx="2" fill="#252525" stroke="rgba(255,255,255,.04)" strokeWidth="1"/>
-                  {[14,26,38,50].map(x => <rect key={x} x={x} y="8" width="5" height="22" rx="1" fill="rgba(255,255,255,.04)"/>)}
-                  {/* Nose with pneumatic piercing probe */}
-                  <rect x="-22" y="16" width="24" height="12" rx="3" fill="#E8610A" stroke="rgba(255,120,30,.4)" strokeWidth="1"/>
-                  <path d="M-22,22 L-30,22" stroke="#FF7A22" strokeWidth="3" strokeLinecap="round"/>
-                  <circle cx="-30" cy="22" r="4" fill="#FF7A22"/>
-                  {/* Brand text */}
-                  <text x="40" y="50" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="900" fontSize="9" fill="rgba(14,14,14,.9)" letterSpacing="1.5">GRUNDOMAT</text>
-                  {/* Wheels */}
-                  {[15,95].map(wx => (
-                    <g key={wx}>
-                      <circle cx={wx} cy="50" r="10" fill="#111" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-                      <circle cx={wx} cy="50" r="5" fill="#1a1a1a"/>
-                    </g>
-                  ))}
-                </g>
-                {/* Pneumatic hose */}
-                <path d="M58,119 Q40,125 30,140 Q20,152 22,165"
-                  fill="none" stroke="#333" strokeWidth="5" strokeLinecap="round"/>
-                <path d="M58,119 Q40,125 30,140 Q20,152 22,165"
-                  fill="none" stroke="#444" strokeWidth="3" strokeLinecap="round"/>
-                {/* Entry pit in garden */}
-                <rect x="14" y="156" width="18" height="22" rx="1" fill="#1A0E06" stroke="rgba(232,97,10,.3)" strokeWidth="1.5"/>
-                {/* Bore direction arrow underground */}
-                <path d="M23,178 Q80,182 150,180 Q200,179 230,180"
-                  stroke="rgba(232,97,10,.4)" strokeWidth="2" strokeDasharray="7 4" fill="none"/>
-                {/* Minimal disruption badge */}
-                <rect x="130" y="96" width="98" height="32" rx="2" fill="rgba(232,97,10,.1)" stroke="rgba(232,97,10,.3)" strokeWidth="1"/>
-                <text x="179" y="109" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="700" fontSize="8.5" fill="var(--orange-l)" letterSpacing=".5">TIGHT SPACES</text>
-                <text x="179" y="121" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontSize="7.5" fill="rgba(232,97,10,.6)">SPECIALIST</text>
-              </svg>
+              <img
+                src="/boring/the-grundomat.png"
+                alt="Grundomat machine"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+
               <div style={{ position:"absolute",bottom:0,left:0,right:0,padding:"14px 18px",background:"linear-gradient(to top,rgba(0,0,0,.9),transparent)" }}>
                 <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"1px" }}>THE GRUNDOMAT</div>
                 <div style={{ fontSize:".72rem",color:"rgba(232,97,10,.85)",marginTop:2,fontFamily:"'Barlow',sans-serif" }}>Compact pneumatic piercing — fits where others can&apos;t</div>
@@ -817,44 +558,12 @@ export default function SouthernBoring() {
 
             {/* Card 3 — Garden/landscaping boring */}
             <div className="gal-item">
-              <svg width="100%" height="100%" viewBox="0 0 200 210" preserveAspectRatio="xMidYMid slice" style={{ display:"block" }}>
-                <rect width="200" height="210" fill="#111"/>
-                {/* Garden scene — lush SA garden */}
-                <rect width="200" height="80" fill="#1A2810"/>
-                {/* Sky with subtle gradient */}
-                <rect width="200" height="80" fill="#141A0E" opacity=".6"/>
-                {/* Trees / plants */}
-                {[20,55,90,135,170].map((x,i) => (
-                  <g key={x}>
-                    <rect x={x-2} y={40+i%2*8} width="4" height={40-i%2*8} fill="#2A1E0C"/>
-                    <ellipse cx={x} cy={38+i%2*8} rx={14+i%2*4} ry={11+i%2*3} fill="#1E4A12" opacity=".9"/>
-                    <ellipse cx={x+5} cy={32+i%2*8} rx={10} ry={8} fill="#255810" opacity=".7"/>
-                  </g>
-                ))}
-                {/* Grass strip */}
-                <rect x="0" y="78" width="200" height="14" fill="#3A5C1A" opacity=".8"/>
-                {/* Garden bed */}
-                <rect x="0" y="92" width="200" height="18" fill="#3D2B1A"/>
-                {/* Mulch texture */}
-                {[10,30,55,80,105,130,155,175].map(x => (
-                  <ellipse key={x} cx={x} cy="101" rx="8" ry="3" fill="#4A3520" opacity=".6"/>
-                ))}
-                {/* Ground */}
-                <rect x="0" y="110" width="200" height="60" fill="#3A2510"/>
-                <rect x="0" y="170" width="200" height="40" fill="#281806"/>
-                {/* Irrigation pipe — blue */}
-                <rect x="0" y="145" width="200" height="6" rx="3" fill="#1A5A8A" opacity=".75"/>
-                <rect x="0" y="146" width="200" height="3" rx="1.5" fill="rgba(60,160,240,.35)"/>
-                {/* Entry/exit pits — small, clean */}
-                <rect x="6" y="110" width="14" height="22" rx="1" fill="#1A0E06" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-                <rect x="180" y="110" width="14" height="22" rx="1" fill="#1A0E06" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-                {/* Checkmarks on surface — garden undisturbed */}
-                <circle cx="100" cy="86" r="12" fill="rgba(232,97,10,.15)" stroke="rgba(232,97,10,.4)" strokeWidth="1.5"/>
-                <path d="M94,86 L99,92 L108,79" stroke="var(--orange-l)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                {/* Label */}
-                <rect x="30" y="118" width="140" height="16" rx="2" fill="rgba(26,90,138,.15)" stroke="rgba(40,140,220,.2)" strokeWidth="1"/>
-                <text x="100" y="129" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="700" fontSize="8" fill="rgba(100,180,255,.7)" letterSpacing="1">IRRIGATION PIPE</text>
-              </svg>
+              <img
+                src="/boring/garden-boring.png"
+                alt="Garden boring"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+
               <div style={{ position:"absolute",bottom:0,left:0,right:0,padding:"14px 18px",background:"linear-gradient(to top,rgba(0,0,0,.9),transparent)" }}>
                 <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"1px" }}>GARDEN BORING</div>
                 <div style={{ fontSize:".72rem",color:"rgba(232,97,10,.85)",marginTop:2,fontFamily:"'Barlow',sans-serif" }}>Landscaping untouched · Irrigation &amp; water</div>
@@ -863,40 +572,12 @@ export default function SouthernBoring() {
 
             {/* Card 4 — Footpath / council path */}
             <div className="gal-item">
-              <svg width="100%" height="100%" viewBox="0 0 200 210" preserveAspectRatio="xMidYMid slice" style={{ display:"block" }}>
-                <rect width="200" height="210" fill="#111"/>
-                {/* Street scene — top down cross-section */}
-                {/* Grass verge left */}
-                <rect x="0" y="0" width="50" height="80" fill="#2D4018" opacity=".7"/>
-                {/* Footpath */}
-                <rect x="50" y="0" width="60" height="80" fill="#2A2A2A" stroke="rgba(255,255,255,.06)" strokeWidth="1"/>
-                {/* Joint lines on path */}
-                {[20,40,60].map(y => <line key={y} x1="50" y1={y} x2="110" y2={y} stroke="rgba(255,255,255,.05)" strokeWidth="1"/>)}
-                {/* Road */}
-                <rect x="110" y="0" width="90" height="80" fill="#1E1E1E"/>
-                <line x1="155" y1="0" x2="155" y2="80" stroke="rgba(255,255,255,.08)" strokeWidth="2" strokeDasharray="12 8"/>
-                {/* Cross-section ground below */}
-                <rect x="0" y="80" width="200" height="55" fill="#3D2B1A"/>
-                <rect x="0" y="135" width="200" height="40" fill="#2A1D0E"/>
-                <rect x="0" y="175" width="200" height="35" fill="#1C1206"/>
-                {/* Bore path — orange conduit */}
-                <rect x="0" y="118" width="200" height="7" rx="3.5" fill="#E8610A" opacity=".6"/>
-                <rect x="0" y="120" width="200" height="3" rx="1.5" fill="rgba(255,140,40,.3)"/>
-                {/* Entry pit (left, grass verge side) */}
-                <rect x="6" y="80" width="14" height="26" rx="1" fill="#1A0E06" stroke="rgba(232,97,10,.4)" strokeWidth="1.5"/>
-                {/* Exit (right, road side) */}
-                <rect x="180" y="80" width="14" height="26" rx="1" fill="#1A0E06" stroke="rgba(232,97,10,.4)" strokeWidth="1.5"/>
-                {/* No-cut badge */}
-                <rect x="40" y="88" width="120" height="20" rx="2" fill="rgba(232,97,10,.1)" stroke="rgba(232,97,10,.25)" strokeWidth="1"/>
-                <text x="100" y="98" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="700" fontSize="8" fill="var(--orange-l)" letterSpacing="1">NO COUNCIL PERMIT</text>
-                <text x="100" y="106" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontSize="7" fill="rgba(232,97,10,.5)" letterSpacing=".5">path stays intact</text>
-                {/* Direction arrow */}
-                <path d="M20,121 Q80,119 140,121 Q170,122 192,122"
-                  stroke="rgba(232,97,10,.4)" strokeWidth="1.5" strokeDasharray="6 4" fill="none"/>
-                {/* Measurement */}
-                <line x1="10" y1="155" x2="190" y2="155" stroke="rgba(255,255,255,.1)" strokeWidth="1" strokeDasharray="4 3"/>
-                <text x="100" y="163" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontSize="8" fill="rgba(255,255,255,.25)" letterSpacing=".5">5 – 10 metres typical</text>
-              </svg>
+              <img
+                src="/boring/footpath-crossing.png"
+                alt="Footpath crossing"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+
               <div style={{ position:"absolute",bottom:0,left:0,right:0,padding:"14px 18px",background:"linear-gradient(to top,rgba(0,0,0,.9),transparent)" }}>
                 <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"1px" }}>FOOTPATH CROSSING</div>
                 <div style={{ fontSize:".72rem",color:"rgba(232,97,10,.85)",marginTop:2,fontFamily:"'Barlow',sans-serif" }}>Under council paths · No permit to cut</div>
@@ -905,44 +586,12 @@ export default function SouthernBoring() {
 
             {/* Card 5 — Electrical + comms conduit */}
             <div className="gal-item">
-              <svg width="100%" height="100%" viewBox="0 0 200 210" preserveAspectRatio="xMidYMid slice" style={{ display:"block" }}>
-                <rect width="200" height="210" fill="#0E0E0E"/>
-                {/* House facade */}
-                <rect x="20" y="10" width="160" height="100" fill="#181818" stroke="rgba(255,255,255,.06)" strokeWidth="1"/>
-                <path d="M12,12 L100,0 L188,12Z" fill="#141414" stroke="rgba(255,255,255,.04)" strokeWidth="1"/>
-                {/* Windows — lit up */}
-                <rect x="35" y="30" width="30" height="26" rx="2" fill="rgba(255,220,100,.1)" stroke="rgba(255,220,100,.15)" strokeWidth="1"/>
-                <rect x="35" y="30" width="30" height="26" rx="2" fill="rgba(255,220,100,.04)"/>
-                <rect x="135" y="30" width="30" height="26" rx="2" fill="rgba(255,220,100,.1)" stroke="rgba(255,220,100,.15)" strokeWidth="1"/>
-                {/* NBN connection box on wall */}
-                <rect x="152" y="72" width="22" height="28" rx="2" fill="#1E1E1E" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-                <rect x="156" y="76" width="14" height="8" rx="1" fill="#222"/>
-                <circle cx="163" cy="90" r="3" fill="rgba(232,97,10,.6)"/>
-                {/* Conduit on wall going down */}
-                <rect x="161" y="100" width="4" height="12" rx="1" fill="#E8610A" opacity=".5"/>
-                {/* Ground */}
-                <rect x="0" y="112" width="200" height="40" fill="#2A1808"/>
-                <rect x="0" y="152" width="200" height="30" fill="#1E1006"/>
-                <rect x="0" y="182" width="200" height="28" fill="#140E04"/>
-                {/* Orange conduit horizontal — power */}
-                <rect x="0" y="128" width="200" height="6" rx="3" fill="#E8610A" opacity=".65"/>
-                <rect x="0" y="130" width="200" height="3" rx="1.5" fill="rgba(255,140,40,.3)"/>
-                {/* Grey conduit — NBN/data */}
-                <rect x="0" y="140" width="200" height="5" rx="2.5" fill="#666" opacity=".55"/>
-                {/* Labels */}
-                <text x="15" y="127" fontFamily="Barlow Condensed,sans-serif" fontSize="7" fill="rgba(232,97,10,.5)" letterSpacing="1">POWER</text>
-                <text x="15" y="139" fontFamily="Barlow Condensed,sans-serif" fontSize="7" fill="rgba(150,150,150,.5)" letterSpacing="1">NBN / DATA</text>
-                {/* Entry pit */}
-                <rect x="155" y="112" width="12" height="18" rx="1" fill="#0E0806" stroke="rgba(232,97,10,.35)" strokeWidth="1.5"/>
-                {/* Exit left side — to meter/pit */}
-                <circle cx="10" cy="131" r="7" fill="rgba(232,97,10,.2)" stroke="rgba(232,97,10,.45)" strokeWidth="1.5"/>
-                <circle cx="10" cy="131" r="3" fill="rgba(232,97,10,.55)"/>
-                {/* Electricity symbol */}
-                <path d="M108,162 L115,152 L108,152 L115,142" stroke="rgba(232,97,10,.45)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                {/* BYDA badge */}
-                <rect x="50" y="170" width="100" height="18" rx="2" fill="rgba(232,97,10,.08)" stroke="rgba(232,97,10,.2)" strokeWidth="1"/>
-                <text x="100" y="182" textAnchor="middle" fontFamily="Barlow Condensed,sans-serif" fontWeight="700" fontSize="8" fill="rgba(232,97,10,.55)" letterSpacing="1">BYDA-FIRST</text>
-              </svg>
+              <img
+                src="/boring/power-communications.png"
+                alt="Power and communications"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+
               <div style={{ position:"absolute",bottom:0,left:0,right:0,padding:"14px 18px",background:"linear-gradient(to top,rgba(0,0,0,.92),transparent)" }}>
                 <div style={{ fontFamily:"'Barlow Condensed',sans-serif",fontWeight:900,fontSize:"1rem",color:"#fff",letterSpacing:"1px" }}>POWER &amp; COMMUNICATIONS</div>
                 <div style={{ fontSize:".72rem",color:"rgba(232,97,10,.85)",marginTop:2,fontFamily:"'Barlow',sans-serif" }}>Electrical, NBN, data conduit · BYDA-first</div>
